@@ -687,35 +687,35 @@ Steps:
     <return_field/>
     <fields>
       <field>
-        <column_name>Segment</column_name>
+        <column_name>segment</column_name>
         <stream_name>Segment</stream_name>
       </field>
       <field>
-        <column_name>Segment Name</column_name>
+        <column_name>segmentname</column_name>
         <stream_name>Segment Name</stream_name>
       </field>
       <field>
-        <column_name>Family</column_name>
+        <column_name>family</column_name>
         <stream_name>Family</stream_name>
       </field>
       <field>
-        <column_name>Family Name</column_name>
+        <column_name>familyname</column_name>
         <stream_name>Family Name</stream_name>
       </field>
       <field>
-        <column_name>Class</column_name>
+        <column_name>class</column_name>
         <stream_name>Class</stream_name>
       </field>
       <field>
-        <column_name>Class Name</column_name>
+        <column_name>classname</column_name>
         <stream_name>Class Name</stream_name>
       </field>
       <field>
-        <column_name>Commodity</column_name>
+        <column_name>commodity</column_name>
         <stream_name>Commodity</stream_name>
       </field>
       <field>
-        <column_name>Commodity Name</column_name>
+        <column_name>commodityname</column_name>
         <stream_name>Commodity Name</stream_name>
       </field>
     </fields>

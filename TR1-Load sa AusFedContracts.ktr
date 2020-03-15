@@ -601,7 +601,7 @@ Steps:
       <field>
         <name>publishdate</name>
         <type>Date</type>
-        <format>yyyy-MM-dd</format>
+        <format>dd/MM/yyyy</format>
         <currency>£</currency>
         <decimal>.</decimal>
         <group>,</group>
@@ -612,7 +612,7 @@ Steps:
       <field>
         <name>contractstart</name>
         <type>Date</type>
-        <format>yyyy-MM-dd</format>
+        <format>dd/MM/yyyy</format>
         <currency>£</currency>
         <decimal>.</decimal>
         <group>,</group>
@@ -623,7 +623,7 @@ Steps:
       <field>
         <name>contractend</name>
         <type>Date</type>
-        <format>yyyy-MM-dd</format>
+        <format>dd/MM/yyyy</format>
         <currency>£</currency>
         <decimal>.</decimal>
         <group>,</group>

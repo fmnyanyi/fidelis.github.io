@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>TR1</name>
-    <description>Transformation 1</description>
-    <extended_description>Transformation 1
-Connect to MySQL and load Australian Federal Contracts on the fly.</extended_description>
-    <trans_version>1</trans_version>
+    <name>TR_DIM_PROCUREMENT_METHOD</name>
+    <description>Add data to d_procurement_method table</description>
+    <extended_description/>
+    <trans_version>0</trans_version>
     <trans_type>Normal</trans_type>
-    <trans_status>2</trans_status>
+    <trans_status>1</trans_status>
     <directory>/</directory>
     <parameters>
     </parameters>
@@ -417,7 +416,7 @@ Connect to MySQL and load Australian Federal Contracts on the fly.</extended_des
     <feedback_size>50000</feedback_size>
     <using_thread_priorities>Y</using_thread_priorities>
     <shared_objects_file/>
-    <capture_step_performance>Y</capture_step_performance>
+    <capture_step_performance>N</capture_step_performance>
     <step_performance_capturing_delay>1000</step_performance_capturing_delay>
     <step_performance_capturing_size_limit>100</step_performance_capturing_size_limit>
     <dependencies>
@@ -429,29 +428,31 @@ Connect to MySQL and load Australian Federal Contracts on the fly.</extended_des
     <clusterschemas>
     </clusterschemas>
     <created_user>-</created_user>
-    <created_date>2017/02/01 08:21:37.177</created_date>
+    <created_date>2020/03/16 21:34:48.666</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/02/01 08:21:37.177</modified_date>
+    <modified_date>2020/03/16 21:34:48.666</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
     <notepad>
-      <note>Transformation 1:
+      <note>TR_DIM_PROCUREMENT_METHOD
 
-Goal:
-Connect to MySQL and load Australian Federal Contracts on the fly to the Staging Area schema.
+Goal: Add data to d_procurement_method table in AFC schema from Staging Area
 
 Steps:
 
-1) Import CSV data
-2) Table Output (execute SQL)</note>
+1) Get procurementmethod field uniques values from Staging Area
+2) Add Subrogate Key
+3) Add time stamp
+4) Add source 
+5) Load data to AFC schema</note>
       <xloc>32</xloc>
-      <yloc>16</yloc>
-      <width>708</width>
-      <heigth>181</heigth>
-      <fontname>.AppleSystemUIFont</fontname>
-      <fontsize>13</fontsize>
+      <yloc>32</yloc>
+      <width>444</width>
+      <heigth>183</heigth>
+      <fontname>Segoe UI</fontname>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -467,11 +468,66 @@ Steps:
     </notepad>
   </notepads>
   <connection>
-    <name>localhost</name>
+    <name>afc</name>
     <server>localhost</server>
     <type>MYSQL</type>
     <access>Native</access>
-    <database>sys</database>
+    <database>AFC</database>
+    <port>3306</port>
+    <username>root</username>
+    <password>Encrypted 2be98afc86aa7f28dae14ac748cc2fd8a</password>
+    <servername/>
+    <data_tablespace/>
+    <index_tablespace/>
+    <attributes>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>IS_CLUSTERED</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>PORT_NUMBER</code>
+        <attribute>3306</attribute>
+      </attribute>
+      <attribute>
+        <code>PRESERVE_RESERVED_WORD_CASE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>QUOTE_ALL_FIELDS</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>STREAM_RESULTS</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>USE_POOLING</code>
+        <attribute>N</attribute>
+      </attribute>
+    </attributes>
+  </connection>
+  <connection>
+    <name>stagingarea</name>
+    <server>localhost</server>
+    <type>MYSQL</type>
+    <access>Native</access>
+    <database>sa</database>
     <port>3306</port>
     <username>root</username>
     <password>Encrypted 2be98afc86aa7f28dae14ac748cc2fd8a</password>
@@ -523,14 +579,29 @@ Steps:
   </connection>
   <order>
     <hop>
-      <from>Import CSV</from>
+      <from>Table input</from>
+      <to>Add sequence</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Add sequence</from>
+      <to>Get system info</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Get system info</from>
+      <to>Add constants</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Add constants</from>
       <to>Table output</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>Import CSV</name>
-    <type>CsvInput</type>
+    <name>Add constants</name>
+    <type>Constant</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -539,185 +610,18 @@ Steps:
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <filename>${Internal.Entry.Current.Directory}/data_input/AustralianFederalContracts.csv</filename>
-    <filename_field>${Internal.Entry.Current.Directory}/data_input/customer_data.csv</filename_field>
-    <rownum_field/>
-    <include_filename>N</include_filename>
-    <separator>,</separator>
-    <enclosure>"</enclosure>
-    <header>Y</header>
-    <buffer_size>50000</buffer_size>
-    <lazy_conversion>Y</lazy_conversion>
-    <add_filename_result>N</add_filename_result>
-    <parallel>N</parallel>
-    <newline_possible>N</newline_possible>
-    <format>mixed</format>
-    <encoding/>
     <fields>
       <field>
-        <name>agencyname</name>
+        <name>source</name>
         <type>String</type>
         <format/>
-        <currency>£</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>125</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>value</name>
-        <type>Number</type>
-        <format>#.#</format>
-        <currency>£</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>12</length>
-        <precision>2</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>suppliername</name>
-        <type>String</type>
-        <format/>
-        <currency>£</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>250</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>description</name>
-        <type>String</type>
-        <format/>
-        <currency>£</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>262</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>publishdate</name>
-        <type>Date</type>
-        <format>yyyy-MM-dd</format>
-        <currency>£</currency>
-        <decimal>.</decimal>
-        <group>,</group>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif>AustralianFederalContracts.csv</nullif>
         <length>-1</length>
         <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>contractstart</name>
-        <type>Date</type>
-        <format>yyyy-MM-dd</format>
-        <currency>£</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>-1</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>contractend</name>
-        <type>Date</type>
-        <format>yyyy-MM-dd</format>
-        <currency>£</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>-1</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>procurementmethod</name>
-        <type>String</type>
-        <format/>
-        <currency>£</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>6</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>category</name>
-        <type>String</type>
-        <format/>
-        <currency>£</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>200</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>agencyabn</name>
-        <type>String</type>
-        <format>#</format>
-        <currency>£</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>supplierabn</name>
-        <type>String</type>
-        <format>#</format>
-        <currency>£</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>categoryunspsc</name>
-        <type>String</type>
-        <format>#</format>
-        <currency>£</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>cnid</name>
-        <type>String</type>
-        <format/>
-        <currency>£</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>20</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>supplierid</name>
-        <type>String</type>
-        <format/>
-        <currency>£</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>200</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>sourceurl</name>
-        <type>String</type>
-        <format/>
-        <currency>£</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>200</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
+        <set_empty_string>N</set_empty_string>
       </field>
     </fields>
     <attributes/>
@@ -729,8 +633,109 @@ Steps:
       </output>
     </remotesteps>
     <GUI>
-      <xloc>144</xloc>
-      <yloc>224</yloc>
+      <xloc>928</xloc>
+      <yloc>192</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Add sequence</name>
+    <type>Sequence</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <valuename>id_procurement_method</valuename>
+    <use_database>N</use_database>
+    <connection>stagingarea</connection>
+    <schema/>
+    <seqname>SEQ_</seqname>
+    <use_counter>Y</use_counter>
+    <counter_name/>
+    <start_at>1</start_at>
+    <increment_by>1</increment_by>
+    <max_value>999999999</max_value>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>672</xloc>
+      <yloc>192</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Get system info</name>
+    <type>SystemInfo</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <name>date_stamp</name>
+        <type>system date (fixed)</type>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>800</xloc>
+      <yloc>192</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Table input</name>
+    <type>TableInput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>stagingarea</connection>
+    <sql>SELECT DISTINCT procurementmethod
+FROM ausfedcontracts WHERE procurementmethod IS NOT NULL 
+ORDER BY procurementmethod
+</sql>
+    <limit>0</limit>
+    <lookup/>
+    <execute_each_row>N</execute_each_row>
+    <variables_active>N</variables_active>
+    <lazy_conversion_active>Y</lazy_conversion_active>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>560</xloc>
+      <yloc>192</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -740,14 +745,14 @@ Steps:
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
-    <copies>4</copies>
+    <copies>1</copies>
     <partitioning>
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>localhost</connection>
-    <schema>SA</schema>
-    <table>AusFedContracts</table>
+    <connection>afc</connection>
+    <schema>AFC</schema>
+    <table>d_procurement_method</table>
     <commit>1000</commit>
     <truncate>N</truncate>
     <ignore_errors>N</ignore_errors>
@@ -764,64 +769,20 @@ Steps:
     <return_field/>
     <fields>
       <field>
-        <column_name>agencyname</column_name>
-        <stream_name>agencyname</stream_name>
-      </field>
-      <field>
-        <column_name>value</column_name>
-        <stream_name>value</stream_name>
-      </field>
-      <field>
-        <column_name>suppliername</column_name>
-        <stream_name>suppliername</stream_name>
-      </field>
-      <field>
-        <column_name>description</column_name>
-        <stream_name>description</stream_name>
-      </field>
-      <field>
-        <column_name>publishdate</column_name>
-        <stream_name>publishdate</stream_name>
-      </field>
-      <field>
-        <column_name>contractstart</column_name>
-        <stream_name>contractstart</stream_name>
-      </field>
-      <field>
-        <column_name>contractend</column_name>
-        <stream_name>contractend</stream_name>
-      </field>
-      <field>
         <column_name>procurementmethod</column_name>
         <stream_name>procurementmethod</stream_name>
       </field>
       <field>
-        <column_name>category</column_name>
-        <stream_name>category</stream_name>
+        <column_name>id_procurement_method</column_name>
+        <stream_name>id_procurement_method</stream_name>
       </field>
       <field>
-        <column_name>agencyabn</column_name>
-        <stream_name>agencyabn</stream_name>
+        <column_name>date_stamp</column_name>
+        <stream_name>date_stamp</stream_name>
       </field>
       <field>
-        <column_name>supplierabn</column_name>
-        <stream_name>supplierabn</stream_name>
-      </field>
-      <field>
-        <column_name>categoryunspsc</column_name>
-        <stream_name>categoryunspsc</stream_name>
-      </field>
-      <field>
-        <column_name>cnid</column_name>
-        <stream_name>cnid</stream_name>
-      </field>
-      <field>
-        <column_name>supplierid</column_name>
-        <stream_name>supplierid</stream_name>
-      </field>
-      <field>
-        <column_name>sourceurl</column_name>
-        <stream_name>sourceurl</stream_name>
+        <column_name>source</column_name>
+        <stream_name>source</stream_name>
       </field>
     </fields>
     <attributes/>
@@ -833,8 +794,8 @@ Steps:
       </output>
     </remotesteps>
     <GUI>
-      <xloc>320</xloc>
-      <yloc>224</yloc>
+      <xloc>1056</xloc>
+      <yloc>192</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

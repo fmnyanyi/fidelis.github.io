@@ -780,10 +780,6 @@ Steps:
         <stream_name>description</stream_name>
       </field>
       <field>
-        <column_name>publishdate</column_name>
-        <stream_name>publishdate</stream_name>
-      </field>
-      <field>
         <column_name>contractstart</column_name>
         <stream_name>contractstart</stream_name>
       </field>
@@ -814,14 +810,6 @@ Steps:
       <field>
         <column_name>cnid</column_name>
         <stream_name>cnid</stream_name>
-      </field>
-      <field>
-        <column_name>supplierid</column_name>
-        <stream_name>supplierid</stream_name>
-      </field>
-      <field>
-        <column_name>sourceurl</column_name>
-        <stream_name>sourceurl</stream_name>
       </field>
     </fields>
     <attributes/>

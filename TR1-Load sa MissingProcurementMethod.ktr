@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>TR1</name>
+    <name>TR1-Load sa MissingProcurementMethod</name>
     <description>Transformation 1</description>
     <extended_description>Transformation 1
 Connect to MySQL and load Australian Federal Contracts on the fly.</extended_description>
@@ -440,16 +440,17 @@ Connect to MySQL and load Australian Federal Contracts on the fly.</extended_des
       <note>Transformation 1:
 
 Goal:
-Connect to MySQL and load Australian Federal Contracts on the fly to the Staging Area schema.
+Connect to MySQL and load Missing Procurement Method on the fly to the Staging Area schema.
 
 Steps:
 
 1) Import CSV data
-2) Table Output (execute SQL)</note>
+2) Sort by lookup value (ContractID)
+3) Table Output (execute SQL)</note>
       <xloc>32</xloc>
       <yloc>16</yloc>
-      <width>708</width>
-      <heigth>181</heigth>
+      <width>714</width>
+      <heigth>200</heigth>
       <fontname>.AppleSystemUIFont</fontname>
       <fontsize>13</fontsize>
       <fontbold>N</fontbold>
@@ -467,8 +468,8 @@ Steps:
     </notepad>
     <notepad>
       <note>Execute SQL to create table first</note>
-      <xloc>384</xloc>
-      <yloc>240</yloc>
+      <xloc>400</xloc>
+      <yloc>288</yloc>
       <width>176</width>
       <heigth>26</heigth>
       <fontname>Segoe UI</fontname>
@@ -492,7 +493,7 @@ Steps:
     <server>localhost</server>
     <type>MYSQL</type>
     <access>Native</access>
-    <database>sys</database>
+    <database>sa</database>
     <port>3306</port>
     <username>root</username>
     <password>Encrypted 2be98afc86aa7f28dae14ac748cc2fd8a</password>
@@ -545,6 +546,11 @@ Steps:
   <order>
     <hop>
       <from>Import CSV</from>
+      <to>Sort rows</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Sort rows</from>
       <to>Table output</to>
       <enabled>Y</enabled>
     </hop>
@@ -560,7 +566,7 @@ Steps:
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <filename>${Internal.Entry.Current.Directory}/data_input/AustralianFederalContracts.csv</filename>
+    <filename>C:\Users\drodriguez45\Documents\GitHub\BIDW-group\data_input\MissingProcurementMethod.csv</filename>
     <filename_field>${Internal.Entry.Current.Directory}/data_input/customer_data.csv</filename_field>
     <rownum_field/>
     <include_filename>N</include_filename>
@@ -576,139 +582,7 @@ Steps:
     <encoding/>
     <fields>
       <field>
-        <name>agencyname</name>
-        <type>String</type>
-        <format/>
-        <currency>£</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>125</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>value</name>
-        <type>Number</type>
-        <format>#.#</format>
-        <currency>£</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>12</length>
-        <precision>2</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>suppliername</name>
-        <type>String</type>
-        <format/>
-        <currency>£</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>250</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>description</name>
-        <type>String</type>
-        <format/>
-        <currency>£</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>262</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>publishdate</name>
-        <type>Date</type>
-        <format>yyyy-MM-dd</format>
-        <currency>£</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>-1</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>contractstart</name>
-        <type>Date</type>
-        <format>yyyy-MM-dd</format>
-        <currency>£</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>-1</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>contractend</name>
-        <type>Date</type>
-        <format>yyyy-MM-dd</format>
-        <currency>£</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>-1</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>procurementmethod</name>
-        <type>String</type>
-        <format/>
-        <currency>£</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>6</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>category</name>
-        <type>String</type>
-        <format/>
-        <currency>£</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>200</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>agencyabn</name>
-        <type>String</type>
-        <format>#</format>
-        <currency>£</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>supplierabn</name>
-        <type>String</type>
-        <format>#</format>
-        <currency>£</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>categoryunspsc</name>
-        <type>String</type>
-        <format>#</format>
-        <currency>£</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>cnid</name>
+        <name>Contract.ID</name>
         <type>String</type>
         <format/>
         <currency>£</currency>
@@ -719,24 +593,24 @@ Steps:
         <trim_type>none</trim_type>
       </field>
       <field>
-        <name>supplierid</name>
-        <type>String</type>
-        <format/>
+        <name>Start.Date</name>
+        <type>Date</type>
+        <format>dd/MM/yyyy</format>
         <currency>£</currency>
         <decimal>.</decimal>
         <group>,</group>
-        <length>200</length>
+        <length>-1</length>
         <precision>-1</precision>
         <trim_type>none</trim_type>
       </field>
       <field>
-        <name>sourceurl</name>
+        <name>Procurement.Method</name>
         <type>String</type>
         <format/>
         <currency>£</currency>
         <decimal>.</decimal>
         <group>,</group>
-        <length>200</length>
+        <length>6</length>
         <precision>-1</precision>
         <trim_type>none</trim_type>
       </field>
@@ -750,8 +624,8 @@ Steps:
       </output>
     </remotesteps>
     <GUI>
-      <xloc>144</xloc>
-      <yloc>224</yloc>
+      <xloc>160</xloc>
+      <yloc>272</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -767,8 +641,8 @@ Steps:
       <schema_name/>
     </partitioning>
     <connection>localhost</connection>
-    <schema>SA</schema>
-    <table>AusFedContracts</table>
+    <schema/>
+    <table>missingprocurementmethod</table>
     <commit>1000</commit>
     <truncate>N</truncate>
     <ignore_errors>N</ignore_errors>
@@ -785,52 +659,16 @@ Steps:
     <return_field/>
     <fields>
       <field>
-        <column_name>agencyname</column_name>
-        <stream_name>agencyname</stream_name>
+        <column_name>cnid</column_name>
+        <stream_name>Contract.ID</stream_name>
       </field>
       <field>
-        <column_name>value</column_name>
-        <stream_name>value</stream_name>
-      </field>
-      <field>
-        <column_name>suppliername</column_name>
-        <stream_name>suppliername</stream_name>
-      </field>
-      <field>
-        <column_name>description</column_name>
-        <stream_name>description</stream_name>
-      </field>
-      <field>
-        <column_name>contractstart</column_name>
-        <stream_name>contractstart</stream_name>
-      </field>
-      <field>
-        <column_name>contractend</column_name>
-        <stream_name>contractend</stream_name>
+        <column_name>startdate</column_name>
+        <stream_name>Start.Date</stream_name>
       </field>
       <field>
         <column_name>procurementmethod</column_name>
-        <stream_name>procurementmethod</stream_name>
-      </field>
-      <field>
-        <column_name>category</column_name>
-        <stream_name>category</stream_name>
-      </field>
-      <field>
-        <column_name>agencyabn</column_name>
-        <stream_name>agencyabn</stream_name>
-      </field>
-      <field>
-        <column_name>supplierabn</column_name>
-        <stream_name>supplierabn</stream_name>
-      </field>
-      <field>
-        <column_name>categoryunspsc</column_name>
-        <stream_name>categoryunspsc</stream_name>
-      </field>
-      <field>
-        <column_name>cnid</column_name>
-        <stream_name>cnid</stream_name>
+        <stream_name>Procurement.Method</stream_name>
       </field>
     </fields>
     <attributes/>
@@ -842,8 +680,50 @@ Steps:
       </output>
     </remotesteps>
     <GUI>
-      <xloc>320</xloc>
-      <yloc>224</yloc>
+      <xloc>336</xloc>
+      <yloc>272</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Sort rows</name>
+    <type>SortRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <directory>%%java.io.tmpdir%%</directory>
+    <prefix>out</prefix>
+    <sort_size>1000000</sort_size>
+    <free_memory/>
+    <compress>N</compress>
+    <compress_variable/>
+    <unique_rows>N</unique_rows>
+    <fields>
+      <field>
+        <name>Contract.ID</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>256</xloc>
+      <yloc>272</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

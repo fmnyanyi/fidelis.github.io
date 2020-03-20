@@ -440,7 +440,7 @@ Connect to MySQL and load unspsc codes on the fly.</extended_description>
       <note>Transformation 2:
 
 Goal:
-Connect to MySQL and load unspsc codes on the fly to the Staging Area schema.
+Connect to MySQL and load AusTender customised unspsc codes on the fly to the Staging Area schema.
 
 Steps:
 
@@ -448,7 +448,7 @@ Steps:
 2) Table Output (execute SQL)</note>
       <xloc>32</xloc>
       <yloc>16</yloc>
-      <width>603</width>
+      <width>771</width>
       <heigth>181</heigth>
       <fontname>.AppleSystemUIFont</fontname>
       <fontsize>13</fontsize>
@@ -465,13 +465,34 @@ Steps:
       <bordercolorblue>100</bordercolorblue>
       <drawshadow>Y</drawshadow>
     </notepad>
+    <notepad>
+      <note>Execute SQL first</note>
+      <xloc>384</xloc>
+      <yloc>240</yloc>
+      <width>98</width>
+      <heigth>26</heigth>
+      <fontname>Segoe UI</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
   </notepads>
   <connection>
-    <name>localhost</name>
+    <name>stagingarea</name>
     <server>localhost</server>
     <type>MYSQL</type>
     <access>Native</access>
-    <database>sys</database>
+    <database>sa</database>
     <port>3306</port>
     <username>root</username>
     <password>Encrypted 2be98afc86aa7f28dae14ac748cc2fd8a</password>
@@ -539,7 +560,7 @@ Steps:
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <filename>${Internal.Entry.Current.Directory}/data_input/unspsc codes_3.csv</filename>
+    <filename>C:\Users\drodriguez45\Documents\GitHub\BIDW-group\data_input\austendercustomisedunspsccodeset.csv</filename>
     <filename_field>${Internal.Entry.Current.Directory}/data_input/customer_data.csv</filename_field>
     <rownum_field/>
     <include_filename>N</include_filename>
@@ -555,90 +576,35 @@ Steps:
     <encoding/>
     <fields>
       <field>
-        <name>Segment</name>
+        <name>Code</name>
         <type>String</type>
-        <format>#</format>
+        <format/>
         <currency>£</currency>
         <decimal>.</decimal>
         <group>,</group>
-        <length>15</length>
-        <precision>0</precision>
+        <length>8</length>
+        <precision>-1</precision>
         <trim_type>none</trim_type>
       </field>
       <field>
-        <name>Segment Name</name>
+        <name>Child Category</name>
+        <type>String</type>
+        <format/>
+        <currency>£</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <length>115</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>Parent Category</name>
         <type>String</type>
         <format/>
         <currency>£</currency>
         <decimal>.</decimal>
         <group>,</group>
         <length>130</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>Family</name>
-        <type>String</type>
-        <format>#</format>
-        <currency>£</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>Family Name</name>
-        <type>String</type>
-        <format/>
-        <currency>£</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>90</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>Class</name>
-        <type>String</type>
-        <format>#</format>
-        <currency>£</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>Class Name</name>
-        <type>String</type>
-        <format/>
-        <currency>£</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>160</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>Commodity</name>
-        <type>String</type>
-        <format>#</format>
-        <currency>£</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>Commodity Name</name>
-        <type>String</type>
-        <format/>
-        <currency>£</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>120</length>
         <precision>-1</precision>
         <trim_type>none</trim_type>
       </field>
@@ -668,8 +634,8 @@ Steps:
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>localhost</connection>
-    <schema>sa</schema>
+    <connection>stagingarea</connection>
+    <schema/>
     <table>unspsc_codes</table>
     <commit>1000</commit>
     <truncate>N</truncate>
@@ -687,36 +653,16 @@ Steps:
     <return_field/>
     <fields>
       <field>
-        <column_name>segment</column_name>
-        <stream_name>Segment</stream_name>
+        <column_name>categoryunspsc</column_name>
+        <stream_name>Code</stream_name>
       </field>
       <field>
-        <column_name>segmentname</column_name>
-        <stream_name>Segment Name</stream_name>
+        <column_name>childcategory</column_name>
+        <stream_name>Child Category</stream_name>
       </field>
       <field>
-        <column_name>family</column_name>
-        <stream_name>Family</stream_name>
-      </field>
-      <field>
-        <column_name>familyname</column_name>
-        <stream_name>Family Name</stream_name>
-      </field>
-      <field>
-        <column_name>class</column_name>
-        <stream_name>Class</stream_name>
-      </field>
-      <field>
-        <column_name>classname</column_name>
-        <stream_name>Class Name</stream_name>
-      </field>
-      <field>
-        <column_name>commodity</column_name>
-        <stream_name>Commodity</stream_name>
-      </field>
-      <field>
-        <column_name>commodityname</column_name>
-        <stream_name>Commodity Name</stream_name>
+        <column_name>parentcategory</column_name>
+        <stream_name>Parent Category</stream_name>
       </field>
     </fields>
     <attributes/>

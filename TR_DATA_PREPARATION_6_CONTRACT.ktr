@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>TR_DATA_PREPARATION_2_DATE</name>
+    <name>TR_DATA_PREPARATION_4_DESCRIPTION</name>
     <description/>
     <extended_description/>
     <trans_version>0</trans_version>
@@ -436,19 +436,19 @@
   </info>
   <notepads>
     <notepad>
-      <note>DATA PREPARATION - 2 - DATE:
+      <note>DATA PREPARATION - 4 - DESCRIPTION:
 
 This transformation will update your ausfedcontracts table in staging area 
 Origin: SA 
 Destination: SA
 
 Goal:
-Correct errors where contract end date is &lt; data contract start date
+Correct missing values in descripcion
 
 Steps:
-1) Load cnid, contractstart and contractend
-2) Lookup correct start and end dates in errorsdate table 
-3) Replace error values by the found value 
+1) Load ausfedcontracts
+2) Filter records with missing values 
+3) Replace missing values by category 
 4) Update ausfedcontracts  </note>
       <xloc>32</xloc>
       <yloc>16</yloc>
@@ -533,79 +533,15 @@ Steps:
     </hop>
     <hop>
       <from>Filter rows</from>
-      <to>Database lookup</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Database lookup</from>
       <to>Set field value</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
       <from>Set field value</from>
-      <to>Select values</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Select values</from>
       <to>Update</to>
       <enabled>Y</enabled>
     </hop>
   </order>
-  <step>
-    <name>Database lookup</name>
-    <type>DBLookup</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <connection>stagingarea</connection>
-    <cache>N</cache>
-    <cache_load_all>N</cache_load_all>
-    <cache_size>0</cache_size>
-    <lookup>
-      <schema/>
-      <table>errorsdate</table>
-      <orderby/>
-      <fail_on_multiple>N</fail_on_multiple>
-      <eat_row_on_failure>Y</eat_row_on_failure>
-      <key>
-        <name>cnid</name>
-        <field>cnid</field>
-        <condition>=</condition>
-        <name2/>
-      </key>
-      <value>
-        <name>contractstart</name>
-        <rename>contractstart_found</rename>
-        <default/>
-        <type>None</type>
-      </value>
-      <value>
-        <name>contractend</name>
-        <rename>contractend_found</rename>
-        <default/>
-        <type>None</type>
-      </value>
-    </lookup>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>544</xloc>
-      <yloc>320</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
   <step>
     <name>Filter rows</name>
     <type>FilterRows</type>
@@ -617,14 +553,14 @@ Steps:
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <send_true_to>Database lookup</send_true_to>
+    <send_true_to>Set field value</send_true_to>
     <send_false_to/>
     <compare>
       <condition>
         <negated>N</negated>
-        <leftvalue>contractend</leftvalue>
-        <function>&lt;</function>
-        <rightvalue>contractstart</rightvalue>
+        <leftvalue>description</leftvalue>
+        <function>IS NULL</function>
+        <rightvalue/>
       </condition>
     </compare>
     <attributes/>
@@ -642,40 +578,6 @@ Steps:
     </GUI>
   </step>
   <step>
-    <name>Select values</name>
-    <type>SelectValues</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <fields>
-      <select_unspecified>N</select_unspecified>
-      <remove>
-        <name>contractstart_found</name>
-      </remove>
-      <remove>
-        <name>contractend_found</name>
-      </remove>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>880</xloc>
-      <yloc>320</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
     <name>Set field value</name>
     <type>SetValueField</type>
     <description/>
@@ -688,12 +590,8 @@ Steps:
     </partitioning>
     <fields>
       <field>
-        <name>contractstart</name>
-        <replaceby>contractstart_found</replaceby>
-      </field>
-      <field>
-        <name>contractend</name>
-        <replaceby>contractend_found</replaceby>
+        <name>description</name>
+        <replaceby>category</replaceby>
       </field>
     </fields>
     <attributes/>
@@ -705,7 +603,7 @@ Steps:
       </output>
     </remotesteps>
     <GUI>
-      <xloc>720</xloc>
+      <xloc>544</xloc>
       <yloc>320</yloc>
       <draw>Y</draw>
     </GUI>
@@ -840,7 +738,7 @@ FROM ausfedcontracts
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1024</xloc>
+      <xloc>672</xloc>
       <yloc>320</yloc>
       <draw>Y</draw>
     </GUI>

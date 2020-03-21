@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>TR_DATA_PREPARATION_2_DATE</name>
+    <name>TR_DATA_PREPARATION_3_CATEGORY</name>
     <description/>
     <extended_description/>
     <trans_version>0</trans_version>
@@ -436,24 +436,26 @@
   </info>
   <notepads>
     <notepad>
-      <note>DATA PREPARATION - 2 - DATE:
+      <note>DATA PREPARATION - 3 - CATEGORY:
 
-This transformation will update your ausfedcontracts table in staging area 
+This transformation will UPDATE the ausfedcontracts table in staging area 
 Origin: SA 
 Destination: SA
 
 Goal:
-Correct errors where contract end date is &lt; data contract start date
+Correct missing values in categoryunspsc 
 
 Steps:
-1) Load cnid, contractstart and contractend
-2) Lookup correct start and end dates in errorsdate table 
-3) Replace error values by the found value 
-4) Update ausfedcontracts  </note>
+1) Load ausfedcontracts
+2) Filter null values in categoryunspsc
+3) Lookup missing categoryunspsc in unspsc table
+4) Update found values
+5) Replace remaining nulls with "00000000"
+6) Update ausfedcontracts</note>
       <xloc>32</xloc>
       <yloc>16</yloc>
-      <width>402</width>
-      <heigth>231</heigth>
+      <width>401</width>
+      <heigth>263</heigth>
       <fontname>Segoe UI</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -548,64 +550,30 @@ Steps:
     </hop>
     <hop>
       <from>Select values</from>
+      <to>Database lookup 2</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Database lookup 2</from>
+      <to>Set field value 2</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Set field value 2</from>
+      <to>Select values 2</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Select values 2</from>
+      <to>If field value is null</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>If field value is null</from>
       <to>Update</to>
       <enabled>Y</enabled>
     </hop>
   </order>
-  <step>
-    <name>Database lookup</name>
-    <type>DBLookup</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <connection>stagingarea</connection>
-    <cache>N</cache>
-    <cache_load_all>N</cache_load_all>
-    <cache_size>0</cache_size>
-    <lookup>
-      <schema/>
-      <table>errorsdate</table>
-      <orderby/>
-      <fail_on_multiple>N</fail_on_multiple>
-      <eat_row_on_failure>Y</eat_row_on_failure>
-      <key>
-        <name>cnid</name>
-        <field>cnid</field>
-        <condition>=</condition>
-        <name2/>
-      </key>
-      <value>
-        <name>contractstart</name>
-        <rename>contractstart_found</rename>
-        <default/>
-        <type>None</type>
-      </value>
-      <value>
-        <name>contractend</name>
-        <rename>contractend_found</rename>
-        <default/>
-        <type>None</type>
-      </value>
-    </lookup>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>544</xloc>
-      <yloc>320</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
   <step>
     <name>Filter rows</name>
     <type>FilterRows</type>
@@ -622,9 +590,9 @@ Steps:
     <compare>
       <condition>
         <negated>N</negated>
-        <leftvalue>contractend</leftvalue>
-        <function>&lt;</function>
-        <rightvalue>contractstart</rightvalue>
+        <leftvalue>categoryunspsc</leftvalue>
+        <function>IS NULL</function>
+        <rightvalue/>
       </condition>
     </compare>
     <attributes/>
@@ -636,76 +604,7 @@ Steps:
       </output>
     </remotesteps>
     <GUI>
-      <xloc>400</xloc>
-      <yloc>320</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Select values</name>
-    <type>SelectValues</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <fields>
-      <select_unspecified>N</select_unspecified>
-      <remove>
-        <name>contractstart_found</name>
-      </remove>
-      <remove>
-        <name>contractend_found</name>
-      </remove>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>880</xloc>
-      <yloc>320</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Set field value</name>
-    <type>SetValueField</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <fields>
-      <field>
-        <name>contractstart</name>
-        <replaceby>contractstart_found</replaceby>
-      </field>
-      <field>
-        <name>contractend</name>
-        <replaceby>contractend_found</replaceby>
-      </field>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>720</xloc>
+      <xloc>176</xloc>
       <yloc>320</yloc>
       <draw>Y</draw>
     </GUI>
@@ -751,7 +650,267 @@ FROM ausfedcontracts
       </output>
     </remotesteps>
     <GUI>
-      <xloc>256</xloc>
+      <xloc>80</xloc>
+      <yloc>320</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Database lookup</name>
+    <type>DBLookup</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>stagingarea</connection>
+    <cache>N</cache>
+    <cache_load_all>N</cache_load_all>
+    <cache_size>0</cache_size>
+    <lookup>
+      <schema/>
+      <table>unspsc_codes</table>
+      <orderby/>
+      <fail_on_multiple>N</fail_on_multiple>
+      <eat_row_on_failure>N</eat_row_on_failure>
+      <key>
+        <name>category</name>
+        <field>childcategory</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <value>
+        <name>categoryunspsc</name>
+        <rename>found</rename>
+        <default/>
+        <type>None</type>
+      </value>
+    </lookup>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>288</xloc>
+      <yloc>320</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Set field value</name>
+    <type>SetValueField</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <name>categoryunspsc</name>
+        <replaceby>found</replaceby>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>400</xloc>
+      <yloc>320</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Select values</name>
+    <type>SelectValues</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <select_unspecified>N</select_unspecified>
+      <remove>
+        <name>found</name>
+      </remove>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>512</xloc>
+      <yloc>320</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Database lookup 2</name>
+    <type>DBLookup</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>stagingarea</connection>
+    <cache>N</cache>
+    <cache_load_all>N</cache_load_all>
+    <cache_size>0</cache_size>
+    <lookup>
+      <schema/>
+      <table>unspsc_codes</table>
+      <orderby/>
+      <fail_on_multiple>N</fail_on_multiple>
+      <eat_row_on_failure>N</eat_row_on_failure>
+      <key>
+        <name>category</name>
+        <field>parentcategory</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <value>
+        <name>categoryunspsc</name>
+        <rename>found</rename>
+        <default/>
+        <type>None</type>
+      </value>
+    </lookup>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>640</xloc>
+      <yloc>320</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Set field value 2</name>
+    <type>SetValueField</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <name>categoryunspsc</name>
+        <replaceby>found</replaceby>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>768</xloc>
+      <yloc>320</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Select values 2</name>
+    <type>SelectValues</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <select_unspecified>N</select_unspecified>
+      <remove>
+        <name>found</name>
+      </remove>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>896</xloc>
+      <yloc>320</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>If field value is null</name>
+    <type>IfNull</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <replaceAllByValue/>
+    <replaceAllMask/>
+    <selectFields>Y</selectFields>
+    <selectValuesType>N</selectValuesType>
+    <setEmptyStringAll>N</setEmptyStringAll>
+    <valuetypes>
+      </valuetypes>
+    <fields>
+      <field>
+        <name>categoryunspsc</name>
+        <value>00000000</value>
+        <mask/>
+        <set_empty_string>N</set_empty_string>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1024</xloc>
       <yloc>320</yloc>
       <draw>Y</draw>
     </GUI>
@@ -783,52 +942,8 @@ FROM ausfedcontracts
         <name2/>
       </key>
       <value>
-        <name>agencyname</name>
-        <rename>agencyname</rename>
-      </value>
-      <value>
-        <name>value</name>
-        <rename>value</rename>
-      </value>
-      <value>
-        <name>suppliername</name>
-        <rename>suppliername</rename>
-      </value>
-      <value>
-        <name>description</name>
-        <rename>description</rename>
-      </value>
-      <value>
-        <name>contractstart</name>
-        <rename>contractstart</rename>
-      </value>
-      <value>
-        <name>contractend</name>
-        <rename>contractend</rename>
-      </value>
-      <value>
-        <name>procurementmethod</name>
-        <rename>procurementmethod</rename>
-      </value>
-      <value>
-        <name>category</name>
-        <rename>category</rename>
-      </value>
-      <value>
-        <name>agencyabn</name>
-        <rename>agencyabn</rename>
-      </value>
-      <value>
-        <name>supplierabn</name>
-        <rename>supplierabn</rename>
-      </value>
-      <value>
         <name>categoryunspsc</name>
         <rename>categoryunspsc</rename>
-      </value>
-      <value>
-        <name>cnid</name>
-        <rename>cnid</rename>
       </value>
     </lookup>
     <attributes/>
@@ -840,7 +955,7 @@ FROM ausfedcontracts
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1024</xloc>
+      <xloc>1136</xloc>
       <yloc>320</yloc>
       <draw>Y</draw>
     </GUI>

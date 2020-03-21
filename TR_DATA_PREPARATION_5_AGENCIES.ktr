@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>TR_DATA_PREPARATION_2_DATE</name>
+    <name>TR_DATA_PREPARATION_5_AGENCY</name>
     <description/>
     <extended_description/>
     <trans_version>0</trans_version>
@@ -436,18 +436,18 @@
   </info>
   <notepads>
     <notepad>
-      <note>DATA PREPARATION - 2 - DATE:
+      <note>DATA PREPARATION - 5 - AGENCIES:
 
 This transformation will update your ausfedcontracts table in staging area 
 Origin: SA 
 Destination: SA
 
 Goal:
-Correct errors where contract end date is &lt; data contract start date
+Correct missing values in agancyabn
 
 Steps:
-1) Load cnid, contractstart and contractend
-2) Lookup correct start and end dates in errorsdate table 
+1) Load ausfedcontracts
+2) Lookup correct agencyabn in MissingAgencyabn table 
 3) Replace error values by the found value 
 4) Update ausfedcontracts  </note>
       <xloc>32</xloc>
@@ -569,25 +569,19 @@ Steps:
     <cache_size>0</cache_size>
     <lookup>
       <schema/>
-      <table>errorsdate</table>
+      <table>agencyabn</table>
       <orderby/>
       <fail_on_multiple>N</fail_on_multiple>
       <eat_row_on_failure>Y</eat_row_on_failure>
       <key>
-        <name>cnid</name>
-        <field>cnid</field>
+        <name>agencyname</name>
+        <field>agencyname</field>
         <condition>=</condition>
         <name2/>
       </key>
       <value>
-        <name>contractstart</name>
-        <rename>contractstart_found</rename>
-        <default/>
-        <type>None</type>
-      </value>
-      <value>
-        <name>contractend</name>
-        <rename>contractend_found</rename>
+        <name>agencyabn</name>
+        <rename>agencyabn_found</rename>
         <default/>
         <type>None</type>
       </value>
@@ -622,9 +616,9 @@ Steps:
     <compare>
       <condition>
         <negated>N</negated>
-        <leftvalue>contractend</leftvalue>
-        <function>&lt;</function>
-        <rightvalue>contractstart</rightvalue>
+        <leftvalue>agencyabn</leftvalue>
+        <function>IS NULL</function>
+        <rightvalue/>
       </condition>
     </compare>
     <attributes/>
@@ -655,10 +649,7 @@ Steps:
     <fields>
       <select_unspecified>N</select_unspecified>
       <remove>
-        <name>contractstart_found</name>
-      </remove>
-      <remove>
-        <name>contractend_found</name>
+        <name>agencyabn_found</name>
       </remove>
     </fields>
     <attributes/>
@@ -688,12 +679,8 @@ Steps:
     </partitioning>
     <fields>
       <field>
-        <name>contractstart</name>
-        <replaceby>contractstart_found</replaceby>
-      </field>
-      <field>
-        <name>contractend</name>
-        <replaceby>contractend_found</replaceby>
+        <name>agencyabn</name>
+        <replaceby>agencyabn_found</replaceby>
       </field>
     </fields>
     <attributes/>

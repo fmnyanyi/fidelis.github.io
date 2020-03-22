@@ -593,7 +593,7 @@ Steps:
         <currency>£</currency>
         <decimal>.</decimal>
         <group>,</group>
-        <length>12</length>
+        <length>-1</length>
         <precision>2</precision>
         <trim_type>none</trim_type>
       </field>
@@ -615,9 +615,9 @@ Steps:
         <currency>£</currency>
         <decimal>.</decimal>
         <group>,</group>
-        <length>262</length>
+        <length>270</length>
         <precision>-1</precision>
-        <trim_type>none</trim_type>
+        <trim_type>both</trim_type>
       </field>
       <field>
         <name>publishdate</name>
@@ -681,7 +681,7 @@ Steps:
         <currency>£</currency>
         <decimal>.</decimal>
         <group>,</group>
-        <length>15</length>
+        <length>11</length>
         <precision>0</precision>
         <trim_type>none</trim_type>
       </field>
@@ -692,7 +692,7 @@ Steps:
         <currency>£</currency>
         <decimal>.</decimal>
         <group>,</group>
-        <length>15</length>
+        <length>11</length>
         <precision>0</precision>
         <trim_type>none</trim_type>
       </field>
@@ -703,7 +703,7 @@ Steps:
         <currency>£</currency>
         <decimal>.</decimal>
         <group>,</group>
-        <length>15</length>
+        <length>8</length>
         <precision>0</precision>
         <trim_type>none</trim_type>
       </field>
@@ -714,7 +714,7 @@ Steps:
         <currency>£</currency>
         <decimal>.</decimal>
         <group>,</group>
-        <length>20</length>
+        <length>10</length>
         <precision>-1</precision>
         <trim_type>none</trim_type>
       </field>
@@ -768,7 +768,7 @@ Steps:
     </partitioning>
     <connection>localhost</connection>
     <schema>SA</schema>
-    <table>AusFedContracts</table>
+    <table>AusFedContracts00</table>
     <commit>1000</commit>
     <truncate>N</truncate>
     <ignore_errors>N</ignore_errors>

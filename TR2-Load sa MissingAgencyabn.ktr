@@ -560,7 +560,7 @@ Steps:
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <filename>C:\Users\drodriguez45\Documents\GitHub\BIDW-group\data_input\MissingAgencyabn.csv</filename>
+    <filename>${Internal.Entry.Current.Directory}/data_input/MissingAgencyabn.csv</filename>
     <filename_field>${Internal.Entry.Current.Directory}/data_input/customer_data.csv</filename_field>
     <rownum_field/>
     <include_filename>N</include_filename>

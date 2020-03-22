@@ -489,7 +489,7 @@ Steps:
     </notepad>
   </notepads>
   <connection>
-    <name>localhost</name>
+    <name>stagingarea</name>
     <server>localhost</server>
     <type>MYSQL</type>
     <access>Native</access>
@@ -566,7 +566,7 @@ Steps:
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <filename>C:\Users\drodriguez45\Documents\GitHub\BIDW-group\data_input\MissingProcurementMethod.csv</filename>
+    <filename>${Internal.Entry.Current.Directory}/data_input/\MissingProcurementMethod.csv</filename>
     <filename_field>${Internal.Entry.Current.Directory}/data_input/customer_data.csv</filename_field>
     <rownum_field/>
     <include_filename>N</include_filename>
@@ -588,7 +588,7 @@ Steps:
         <currency>£</currency>
         <decimal>.</decimal>
         <group>,</group>
-        <length>20</length>
+        <length>10</length>
         <precision>-1</precision>
         <trim_type>none</trim_type>
       </field>
@@ -625,62 +625,6 @@ Steps:
     </remotesteps>
     <GUI>
       <xloc>160</xloc>
-      <yloc>272</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Table output</name>
-    <type>TableOutput</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>4</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <connection>localhost</connection>
-    <schema/>
-    <table>missingprocurementmethod</table>
-    <commit>1000</commit>
-    <truncate>N</truncate>
-    <ignore_errors>N</ignore_errors>
-    <use_batch>Y</use_batch>
-    <specify_fields>Y</specify_fields>
-    <partitioning_enabled>N</partitioning_enabled>
-    <partitioning_field/>
-    <partitioning_daily>N</partitioning_daily>
-    <partitioning_monthly>Y</partitioning_monthly>
-    <tablename_in_field>N</tablename_in_field>
-    <tablename_field/>
-    <tablename_in_table>Y</tablename_in_table>
-    <return_keys>N</return_keys>
-    <return_field/>
-    <fields>
-      <field>
-        <column_name>cnid</column_name>
-        <stream_name>Contract.ID</stream_name>
-      </field>
-      <field>
-        <column_name>startdate</column_name>
-        <stream_name>Start.Date</stream_name>
-      </field>
-      <field>
-        <column_name>procurementmethod</column_name>
-        <stream_name>Procurement.Method</stream_name>
-      </field>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>336</xloc>
       <yloc>272</yloc>
       <draw>Y</draw>
     </GUI>
@@ -723,6 +667,62 @@ Steps:
     </remotesteps>
     <GUI>
       <xloc>256</xloc>
+      <yloc>272</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Table output</name>
+    <type>TableOutput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>4</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>stagingarea</connection>
+    <schema/>
+    <table>procurementmethod</table>
+    <commit>1000</commit>
+    <truncate>N</truncate>
+    <ignore_errors>N</ignore_errors>
+    <use_batch>Y</use_batch>
+    <specify_fields>Y</specify_fields>
+    <partitioning_enabled>N</partitioning_enabled>
+    <partitioning_field/>
+    <partitioning_daily>N</partitioning_daily>
+    <partitioning_monthly>Y</partitioning_monthly>
+    <tablename_in_field>N</tablename_in_field>
+    <tablename_field/>
+    <tablename_in_table>Y</tablename_in_table>
+    <return_keys>N</return_keys>
+    <return_field/>
+    <fields>
+      <field>
+        <column_name>cnid</column_name>
+        <stream_name>Contract.ID</stream_name>
+      </field>
+      <field>
+        <column_name>startdate</column_name>
+        <stream_name>Start.Date</stream_name>
+      </field>
+      <field>
+        <column_name>procurementmethod</column_name>
+        <stream_name>Procurement.Method</stream_name>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>336</xloc>
       <yloc>272</yloc>
       <draw>Y</draw>
     </GUI>

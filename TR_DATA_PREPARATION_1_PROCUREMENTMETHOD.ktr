@@ -438,25 +438,24 @@
     <notepad>
       <note>DATA PREPARATION - 1 - PROCUREMENT METHOD:
 
-This transformation will update your ausfedcontracts table in staging area 
+This transformation will update ausfedcontracts01 table in staging area 
 Origin: SA 
 Destination: SA
-
-EXECUTION TIME: >90min
 
 Goal:
 Fill missing values in procurement method 
 
 Steps:
-1) Load cnid and procurement method
-2) Lookup procurement method missing values in missingvaluesprocurementmethod table 
+1) Load ausfedcontracts00 split in NULL and NOT NULL procurementmethod
+2) Merge LEFT OUT JOIN procurementmethod NULL with procurementmethod table 
 3) Replace missing values by the found value 
-4) Update ausfedcontracts  
+4) If NULLS remaining update to "Missing"
+5) Create ausfedcontracts 01 
 </note>
-      <xloc>704</xloc>
-      <yloc>32</yloc>
-      <width>494</width>
-      <heigth>277</heigth>
+      <xloc>32</xloc>
+      <yloc>48</yloc>
+      <width>459</width>
+      <heigth>262</heigth>
       <fontname>Segoe UI</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -467,27 +466,6 @@ Steps:
       <backgroundcolorred>255</backgroundcolorred>
       <backgroundcolorgreen>205</backgroundcolorgreen>
       <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>HIGH EXECUTION TIME TRANSFORMATION!!!</note>
-      <xloc>240</xloc>
-      <yloc>208</yloc>
-      <width>253</width>
-      <heigth>26</heigth>
-      <fontname>Segoe UI</fontname>
-      <fontsize>9</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>255</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>255</backgroundcolorgreen>
-      <backgroundcolorblue>255</backgroundcolorblue>
       <bordercolorred>100</bordercolorred>
       <bordercolorgreen>100</bordercolorgreen>
       <bordercolorblue>100</bordercolorblue>
@@ -551,34 +529,44 @@ Steps:
   </connection>
   <order>
     <hop>
-      <from>Database lookup</from>
-      <to>Set field value</to>
+      <from>If field value is null</from>
+      <to>Table output</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Set field value</from>
-      <to>Update</to>
+      <from>Set procurementmethod</from>
+      <to>Select values</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Table input</from>
-      <to>Filter rows</to>
+      <from>input procurementmethod</from>
+      <to>Merge join</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Filter rows</from>
-      <to>Sort rows</to>
+      <from>input procurementmethod NULL</from>
+      <to>Merge join</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Sort rows</from>
-      <to>Database lookup</to>
+      <from>Merge join</from>
+      <to>Set procurementmethod</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Select values</from>
+      <to>If field value is null</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>input NOT NULL</from>
+      <to>Table output</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>Database lookup</name>
-    <type>DBLookup</type>
+    <name>If field value is null</name>
+    <type>IfNull</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -587,29 +575,21 @@ Steps:
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>stagingarea</connection>
-    <cache>N</cache>
-    <cache_load_all>N</cache_load_all>
-    <cache_size>0</cache_size>
-    <lookup>
-      <schema/>
-      <table>missingprocurementmethod</table>
-      <orderby/>
-      <fail_on_multiple>N</fail_on_multiple>
-      <eat_row_on_failure>Y</eat_row_on_failure>
-      <key>
-        <name>cnid</name>
-        <field>cnid</field>
-        <condition>=</condition>
-        <name2/>
-      </key>
-      <value>
+    <replaceAllByValue/>
+    <replaceAllMask/>
+    <selectFields>Y</selectFields>
+    <selectValuesType>N</selectValuesType>
+    <setEmptyStringAll>N</setEmptyStringAll>
+    <valuetypes>
+      </valuetypes>
+    <fields>
+      <field>
         <name>procurementmethod</name>
-        <rename>pm_found</rename>
-        <default/>
-        <type>String</type>
-      </value>
-    </lookup>
+        <value>Miss</value>
+        <mask/>
+        <set_empty_string>N</set_empty_string>
+      </field>
+    </fields>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -619,14 +599,14 @@ Steps:
       </output>
     </remotesteps>
     <GUI>
-      <xloc>352</xloc>
-      <yloc>272</yloc>
+      <xloc>992</xloc>
+      <yloc>368</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Filter rows</name>
-    <type>FilterRows</type>
+    <name>Merge join</name>
+    <type>MergeJoin</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -635,16 +615,15 @@ Steps:
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <send_true_to>Sort rows</send_true_to>
-    <send_false_to/>
-    <compare>
-      <condition>
-        <negated>N</negated>
-        <leftvalue>procurementmethod</leftvalue>
-        <function>IS NULL</function>
-        <rightvalue/>
-      </condition>
-    </compare>
+    <join_type>LEFT OUTER</join_type>
+    <step1>input procurementmethod NULL</step1>
+    <step2>input procurementmethod</step2>
+    <keys_1>
+      <key>cnid</key>
+    </keys_1>
+    <keys_2>
+      <key>cnid</key>
+    </keys_2>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -654,13 +633,47 @@ Steps:
       </output>
     </remotesteps>
     <GUI>
-      <xloc>160</xloc>
-      <yloc>272</yloc>
+      <xloc>560</xloc>
+      <yloc>368</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Set field value</name>
+    <name>Select values</name>
+    <type>SelectValues</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <select_unspecified>N</select_unspecified>
+      <remove>
+        <name>cnid_1</name>
+      </remove>
+      <remove>
+        <name>procurementmethod_1</name>
+      </remove>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>848</xloc>
+      <yloc>368</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Set procurementmethod</name>
     <type>SetValueField</type>
     <description/>
     <distribute>Y</distribute>
@@ -673,7 +686,7 @@ Steps:
     <fields>
       <field>
         <name>procurementmethod</name>
-        <replaceby>pm_found</replaceby>
+        <replaceby>procurementmethod_1</replaceby>
       </field>
     </fields>
     <attributes/>
@@ -685,37 +698,87 @@ Steps:
       </output>
     </remotesteps>
     <GUI>
-      <xloc>512</xloc>
-      <yloc>272</yloc>
+      <xloc>688</xloc>
+      <yloc>368</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Sort rows</name>
-    <type>SortRows</type>
+    <name>Table output</name>
+    <type>TableOutput</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
-    <copies>2</copies>
+    <copies>1</copies>
     <partitioning>
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <directory>%%java.io.tmpdir%%</directory>
-    <prefix>out</prefix>
-    <sort_size>1000000</sort_size>
-    <free_memory/>
-    <compress>N</compress>
-    <compress_variable/>
-    <unique_rows>N</unique_rows>
+    <connection>stagingarea</connection>
+    <schema/>
+    <table>ausfedcontracts01</table>
+    <commit>1000</commit>
+    <truncate>N</truncate>
+    <ignore_errors>N</ignore_errors>
+    <use_batch>Y</use_batch>
+    <specify_fields>Y</specify_fields>
+    <partitioning_enabled>N</partitioning_enabled>
+    <partitioning_field/>
+    <partitioning_daily>N</partitioning_daily>
+    <partitioning_monthly>Y</partitioning_monthly>
+    <tablename_in_field>N</tablename_in_field>
+    <tablename_field/>
+    <tablename_in_table>Y</tablename_in_table>
+    <return_keys>N</return_keys>
+    <return_field/>
     <fields>
       <field>
-        <name>cnid</name>
-        <ascending>Y</ascending>
-        <case_sensitive>N</case_sensitive>
-        <collator_enabled>N</collator_enabled>
-        <collator_strength>0</collator_strength>
-        <presorted>N</presorted>
+        <column_name>agencyname</column_name>
+        <stream_name>agencyname</stream_name>
+      </field>
+      <field>
+        <column_name>value</column_name>
+        <stream_name>value</stream_name>
+      </field>
+      <field>
+        <column_name>suppliername</column_name>
+        <stream_name>suppliername</stream_name>
+      </field>
+      <field>
+        <column_name>description</column_name>
+        <stream_name>description</stream_name>
+      </field>
+      <field>
+        <column_name>contractstart</column_name>
+        <stream_name>contractstart</stream_name>
+      </field>
+      <field>
+        <column_name>contractend</column_name>
+        <stream_name>contractend</stream_name>
+      </field>
+      <field>
+        <column_name>procurementmethod</column_name>
+        <stream_name>procurementmethod</stream_name>
+      </field>
+      <field>
+        <column_name>category</column_name>
+        <stream_name>category</stream_name>
+      </field>
+      <field>
+        <column_name>agencyabn</column_name>
+        <stream_name>agencyabn</stream_name>
+      </field>
+      <field>
+        <column_name>supplierabn</column_name>
+        <stream_name>supplierabn</stream_name>
+      </field>
+      <field>
+        <column_name>categoryunspsc</column_name>
+        <stream_name>categoryunspsc</stream_name>
+      </field>
+      <field>
+        <column_name>cnid</column_name>
+        <stream_name>cnid</stream_name>
       </field>
     </fields>
     <attributes/>
@@ -727,13 +790,13 @@ Steps:
       </output>
     </remotesteps>
     <GUI>
-      <xloc>256</xloc>
-      <yloc>272</yloc>
+      <xloc>992</xloc>
+      <yloc>448</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Table input</name>
+    <name>input NOT NULL</name>
     <type>TableInput</type>
     <description/>
     <distribute>Y</distribute>
@@ -757,7 +820,9 @@ Steps:
 , supplierabn
 , categoryunspsc
 , cnid
-FROM ausfedcontracts
+FROM ausfedcontracts00
+WHERE procurementmethod IS NOT NULL
+ORDER BY cnid
 </sql>
     <limit>0</limit>
     <lookup/>
@@ -773,86 +838,34 @@ FROM ausfedcontracts
       </output>
     </remotesteps>
     <GUI>
-      <xloc>32</xloc>
-      <yloc>272</yloc>
+      <xloc>400</xloc>
+      <yloc>448</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Update</name>
-    <type>Update</type>
+    <name>input procurementmethod</name>
+    <type>TableInput</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
-    <copies>8</copies>
+    <copies>1</copies>
     <partitioning>
       <method>none</method>
       <schema_name/>
     </partitioning>
     <connection>stagingarea</connection>
-    <skip_lookup>Y</skip_lookup>
-    <commit>100</commit>
-    <use_batch>N</use_batch>
-    <error_ignored>N</error_ignored>
-    <ignore_flag_field/>
-    <lookup>
-      <schema/>
-      <table>ausfedcontracts</table>
-      <key>
-        <name>cnid</name>
-        <field>cnid</field>
-        <condition>=</condition>
-        <name2/>
-      </key>
-      <value>
-        <name>agencyname</name>
-        <rename>agencyname</rename>
-      </value>
-      <value>
-        <name>value</name>
-        <rename>value</rename>
-      </value>
-      <value>
-        <name>suppliername</name>
-        <rename>suppliername</rename>
-      </value>
-      <value>
-        <name>description</name>
-        <rename>description</rename>
-      </value>
-      <value>
-        <name>contractstart</name>
-        <rename>contractstart</rename>
-      </value>
-      <value>
-        <name>contractend</name>
-        <rename>contractend</rename>
-      </value>
-      <value>
-        <name>procurementmethod</name>
-        <rename>procurementmethod</rename>
-      </value>
-      <value>
-        <name>category</name>
-        <rename>category</rename>
-      </value>
-      <value>
-        <name>agencyabn</name>
-        <rename>agencyabn</rename>
-      </value>
-      <value>
-        <name>supplierabn</name>
-        <rename>supplierabn</rename>
-      </value>
-      <value>
-        <name>categoryunspsc</name>
-        <rename>categoryunspsc</rename>
-      </value>
-      <value>
-        <name>cnid</name>
-        <rename>cnid</rename>
-      </value>
-    </lookup>
+    <sql>SELECT
+  DISTINCT cnid
+, procurementmethod
+FROM procurementmethod
+ORDER BY cnid
+</sql>
+    <limit>0</limit>
+    <lookup/>
+    <execute_each_row>N</execute_each_row>
+    <variables_active>N</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -862,8 +875,56 @@ FROM ausfedcontracts
       </output>
     </remotesteps>
     <GUI>
-      <xloc>656</xloc>
-      <yloc>272</yloc>
+      <xloc>560</xloc>
+      <yloc>256</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>input procurementmethod NULL</name>
+    <type>TableInput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>stagingarea</connection>
+    <sql>SELECT
+  agencyname
+, value
+, suppliername
+, description
+, contractstart
+, contractend
+, procurementmethod
+, category
+, agencyabn
+, supplierabn
+, categoryunspsc
+, cnid
+FROM ausfedcontracts00
+WHERE procurementmethod IS NULL
+ORDER BY cnid
+</sql>
+    <limit>0</limit>
+    <lookup/>
+    <execute_each_row>N</execute_each_row>
+    <variables_active>N</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>400</xloc>
+      <yloc>368</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

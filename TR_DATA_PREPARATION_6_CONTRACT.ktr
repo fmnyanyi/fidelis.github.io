@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>TR_DATA_PREPARATION_4_DESCRIPTION</name>
+    <name>TR_DATA_PREPARATION_6_CONTRACT</name>
     <description/>
     <extended_description/>
     <trans_version>0</trans_version>
@@ -436,14 +436,16 @@
   </info>
   <notepads>
     <notepad>
-      <note>DATA PREPARATION - 4 - DESCRIPTION:
+      <note>DATA PREPARATION - 6 - CONTRACT:
 
 This transformation will update your ausfedcontracts table in staging area 
 Origin: SA 
 Destination: SA
 
+Execution time: 1min
+
 Goal:
-Correct missing values in descripcion
+Correct missing values in description
 
 Steps:
 1) Load ausfedcontracts
@@ -453,7 +455,7 @@ Steps:
       <xloc>32</xloc>
       <yloc>16</yloc>
       <width>402</width>
-      <heigth>231</heigth>
+      <heigth>262</heigth>
       <fontname>Segoe UI</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>

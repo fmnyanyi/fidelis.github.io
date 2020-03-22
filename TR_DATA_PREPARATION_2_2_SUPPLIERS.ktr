@@ -428,26 +428,26 @@
     <clusterschemas>
     </clusterschemas>
     <created_user>-</created_user>
-    <created_date>2020/03/21 12:29:43.096</created_date>
+    <created_date>2020/03/22 23:49:08.214</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2020/03/21 12:29:43.096</modified_date>
-    <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
+    <modified_date>2020/03/22 23:49:08.214</modified_date>
+    <key_for_session_key/>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
     <notepad>
-      <note>Standarize Supplier Name
+      <note>Lookup Supplier ABM missing values
 
-1) Load aisfedcontracts 
-2) Load supplierabn where Matchscore >= 90
-3) Lookup supplier name 
-4) Update
-
+1) Load ausfedcontracts021
+2) IF supplierabn IS NULL lookup in supplierabn 
+3) Set supplierabn if found 
+4) Replace remaining NULL supplierabn for 'abn00000000'
+5) Create ausfedcontract table
 </note>
-      <xloc>16</xloc>
-      <yloc>32</yloc>
-      <width>249</width>
-      <heigth>135</heigth>
+      <xloc>32</xloc>
+      <yloc>16</yloc>
+      <width>313</width>
+      <heigth>136</heigth>
       <fontname>Segoe UI</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -521,178 +521,43 @@
   </connection>
   <order>
     <hop>
-      <from>Table input ausfedcontracts</from>
+      <from>input supplierabn IS NULL</from>
       <to>Stream lookup</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Table input supplierabn</from>
+      <from>input supplierabn</from>
       <to>Stream lookup</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
       <from>Stream lookup</from>
-      <to>If found</to>
+      <to>Set field value</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>If found</from>
-      <to>Replace suppliername</to>
+      <from>Set field value</from>
+      <to>Select values</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Append streams</from>
+      <from>Select values</from>
+      <to>If field value is null</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>input supplierabn NOT NULL</from>
       <to>Table output</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Replace suppliername</from>
-      <to>Append streams</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>If found</from>
-      <to>Append streams</to>
+      <from>If field value is null</from>
+      <to>Table output</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>Append streams</name>
-    <type>Append</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <head_name>If found</head_name>
-    <tail_name>Replace suppliername</tail_name>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>800</xloc>
-      <yloc>288</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>If found</name>
-    <type>FilterRows</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <send_true_to>Replace suppliername</send_true_to>
-    <send_false_to>Append streams</send_false_to>
-    <compare>
-      <condition>
-        <negated>N</negated>
-        <leftvalue>suppliernameMatch</leftvalue>
-        <function>IS NOT NULL</function>
-        <rightvalue/>
-      </condition>
-    </compare>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>480</xloc>
-      <yloc>288</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Replace suppliername</name>
-    <type>SetValueField</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <fields>
-      <field>
-        <name>suppliername</name>
-        <replaceby>suppliernameMatch</replaceby>
-      </field>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>640</xloc>
-      <yloc>160</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Stream lookup</name>
-    <type>StreamLookup</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <from>Table input supplierabn</from>
-    <input_sorted>N</input_sorted>
-    <preserve_memory>Y</preserve_memory>
-    <sorted_list>N</sorted_list>
-    <integer_pair>N</integer_pair>
-    <lookup>
-      <key>
-        <name>suppliername</name>
-        <field>suppliernameCleanup</field>
-      </key>
-      <value>
-        <name>suppliernameMatch</name>
-        <rename>suppliernameMatch</rename>
-        <default/>
-        <type>None</type>
-      </value>
-    </lookup>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>336</xloc>
-      <yloc>288</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Table input ausfedcontracts</name>
+    <name>input supplierabn IS NULL</name>
     <type>TableInput</type>
     <description/>
     <distribute>Y</distribute>
@@ -716,7 +581,9 @@
 , supplierabn
 , categoryunspsc
 , cnid
-FROM ausfedcontracts1
+FROM ausfedcontracts021
+WHERE supplierabn IS NULL
+order by suppliername
 </sql>
     <limit>0</limit>
     <lookup/>
@@ -732,13 +599,13 @@ FROM ausfedcontracts1
       </output>
     </remotesteps>
     <GUI>
-      <xloc>176</xloc>
-      <yloc>288</yloc>
+      <xloc>192</xloc>
+      <yloc>208</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Table input supplierabn</name>
+    <name>input supplierabn</name>
     <type>TableInput</type>
     <description/>
     <distribute>Y</distribute>
@@ -750,13 +617,11 @@ FROM ausfedcontracts1
     </partitioning>
     <connection>stagingarea</connection>
     <sql>SELECT
-  suppliernameCleanup
+  DISTINCT supplierabn
 , suppliernameMatch
-, matchscore
-, supplierabn
-, abnstatus
 FROM supplierabn
-WHERE matchscore >= 90 
+WHERE matchscore >= 90
+ORDER BY suppliernameMatch
 </sql>
     <limit>0</limit>
     <lookup/>
@@ -772,8 +637,200 @@ WHERE matchscore >= 90
       </output>
     </remotesteps>
     <GUI>
-      <xloc>336</xloc>
-      <yloc>144</yloc>
+      <xloc>400</xloc>
+      <yloc>64</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Stream lookup</name>
+    <type>StreamLookup</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <from>input supplierabn</from>
+    <input_sorted>N</input_sorted>
+    <preserve_memory>Y</preserve_memory>
+    <sorted_list>N</sorted_list>
+    <integer_pair>N</integer_pair>
+    <lookup>
+      <key>
+        <name>suppliername</name>
+        <field>suppliernameMatch</field>
+      </key>
+      <value>
+        <name>supplierabn</name>
+        <rename>supplierabn_found</rename>
+        <default/>
+        <type>None</type>
+      </value>
+    </lookup>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>400</xloc>
+      <yloc>208</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Set field value</name>
+    <type>SetValueField</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <name>supplierabn</name>
+        <replaceby>supplierabn_found</replaceby>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>560</xloc>
+      <yloc>208</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Select values</name>
+    <type>SelectValues</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <select_unspecified>N</select_unspecified>
+      <remove>
+        <name>supplierabn_found</name>
+      </remove>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>704</xloc>
+      <yloc>208</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>If field value is null</name>
+    <type>IfNull</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <replaceAllByValue/>
+    <replaceAllMask/>
+    <selectFields>Y</selectFields>
+    <selectValuesType>N</selectValuesType>
+    <setEmptyStringAll>N</setEmptyStringAll>
+    <valuetypes>
+      </valuetypes>
+    <fields>
+      <field>
+        <name>supplierabn</name>
+        <value>abn00000000</value>
+        <mask/>
+        <set_empty_string>N</set_empty_string>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>832</xloc>
+      <yloc>208</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>input supplierabn NOT NULL</name>
+    <type>TableInput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>stagingarea</connection>
+    <sql>SELECT
+  agencyname
+, value
+, suppliername
+, description
+, contractstart
+, contractend
+, procurementmethod
+, category
+, agencyabn
+, supplierabn
+, categoryunspsc
+, cnid
+FROM ausfedcontracts021
+WHERE supplierabn IS NOT NULL
+order by suppliername
+</sql>
+    <limit>0</limit>
+    <lookup/>
+    <execute_each_row>N</execute_each_row>
+    <variables_active>N</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>192</xloc>
+      <yloc>304</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -864,8 +921,8 @@ WHERE matchscore >= 90
       </output>
     </remotesteps>
     <GUI>
-      <xloc>976</xloc>
-      <yloc>288</yloc>
+      <xloc>832</xloc>
+      <yloc>304</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

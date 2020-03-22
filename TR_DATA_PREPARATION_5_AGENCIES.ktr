@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>TR_DATA_PREPARATION_5_AGENCY</name>
+    <name>TR_DATA_PREPARATION_5_AGENCIES</name>
     <description/>
     <extended_description/>
     <trans_version>0</trans_version>
@@ -442,6 +442,8 @@ This transformation will update your ausfedcontracts table in staging area
 Origin: SA 
 Destination: SA
 
+Execution time: 24min
+
 Goal:
 Correct missing values in agancyabn
 
@@ -453,7 +455,7 @@ Steps:
       <xloc>32</xloc>
       <yloc>16</yloc>
       <width>402</width>
-      <heigth>231</heigth>
+      <heigth>262</heigth>
       <fontname>Segoe UI</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>TR_DATA_PREPARATION_2_DATE</name>
+    <name>TR_DATA_PREPARATION_3_DATE</name>
     <description/>
     <extended_description/>
     <trans_version>0</trans_version>
@@ -436,11 +436,13 @@
   </info>
   <notepads>
     <notepad>
-      <note>DATA PREPARATION - 2 - DATE:
+      <note>DATA PREPARATION - 3 - DATE:
 
 This transformation will update your ausfedcontracts table in staging area 
 Origin: SA 
 Destination: SA
+
+Execution time: 1min
 
 Goal:
 Correct errors where contract end date is &lt; data contract start date
@@ -453,7 +455,7 @@ Steps:
       <xloc>32</xloc>
       <yloc>16</yloc>
       <width>402</width>
-      <heigth>231</heigth>
+      <heigth>262</heigth>
       <fontname>Segoe UI</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>

@@ -31,6 +31,29 @@ CREATE TABLE `agencyabn` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `ausfedcontracts`
+--
+
+DROP TABLE IF EXISTS `ausfedcontracts`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `ausfedcontracts` (
+  `agencyname` varchar(125) DEFAULT NULL,
+  `value` double DEFAULT NULL,
+  `suppliername` varchar(250) DEFAULT NULL,
+  `description` text,
+  `contractstart` datetime DEFAULT NULL,
+  `contractend` datetime DEFAULT NULL,
+  `procurementmethod` varchar(6) DEFAULT NULL,
+  `category` varchar(200) DEFAULT NULL,
+  `agencyabn` varchar(11) DEFAULT NULL,
+  `supplierabn` varchar(11) DEFAULT NULL,
+  `categoryunspsc` varchar(8) DEFAULT NULL,
+  `cnid` varchar(10) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `ausfedcontracts00`
 --
 
@@ -38,6 +61,75 @@ DROP TABLE IF EXISTS `ausfedcontracts00`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `ausfedcontracts00` (
+  `agencyname` varchar(125) DEFAULT NULL,
+  `value` double DEFAULT NULL,
+  `suppliername` varchar(250) DEFAULT NULL,
+  `description` text,
+  `contractstart` datetime DEFAULT NULL,
+  `contractend` datetime DEFAULT NULL,
+  `procurementmethod` varchar(6) DEFAULT NULL,
+  `category` varchar(200) DEFAULT NULL,
+  `agencyabn` varchar(11) DEFAULT NULL,
+  `supplierabn` varchar(11) DEFAULT NULL,
+  `categoryunspsc` varchar(8) DEFAULT NULL,
+  `cnid` varchar(10) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `ausfedcontracts01`
+--
+
+DROP TABLE IF EXISTS `ausfedcontracts01`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `ausfedcontracts01` (
+  `agencyname` varchar(125) DEFAULT NULL,
+  `value` double DEFAULT NULL,
+  `suppliername` varchar(250) DEFAULT NULL,
+  `description` text,
+  `contractstart` datetime DEFAULT NULL,
+  `contractend` datetime DEFAULT NULL,
+  `procurementmethod` varchar(6) DEFAULT NULL,
+  `category` varchar(200) DEFAULT NULL,
+  `agencyabn` varchar(11) DEFAULT NULL,
+  `supplierabn` varchar(11) DEFAULT NULL,
+  `categoryunspsc` varchar(8) DEFAULT NULL,
+  `cnid` varchar(10) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `ausfedcontracts020`
+--
+
+DROP TABLE IF EXISTS `ausfedcontracts020`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `ausfedcontracts020` (
+  `agencyname` varchar(125) DEFAULT NULL,
+  `value` double DEFAULT NULL,
+  `suppliername` varchar(250) DEFAULT NULL,
+  `description` text,
+  `contractstart` datetime DEFAULT NULL,
+  `contractend` datetime DEFAULT NULL,
+  `procurementmethod` varchar(6) DEFAULT NULL,
+  `category` varchar(200) DEFAULT NULL,
+  `agencyabn` varchar(11) DEFAULT NULL,
+  `supplierabn` varchar(11) DEFAULT NULL,
+  `categoryunspsc` varchar(8) DEFAULT NULL,
+  `cnid` varchar(10) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `ausfedcontracts021`
+--
+
+DROP TABLE IF EXISTS `ausfedcontracts021`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `ausfedcontracts021` (
   `agencyname` varchar(125) DEFAULT NULL,
   `value` double DEFAULT NULL,
   `suppliername` varchar(250) DEFAULT NULL,
@@ -120,4 +212,4 @@ CREATE TABLE `unspsccodes` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-03-22 15:54:01
+-- Dump completed on 2020-03-23  0:09:54

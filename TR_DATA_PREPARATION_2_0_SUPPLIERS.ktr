@@ -437,7 +437,7 @@
   <notepads>
     <notepad>
       <note>Execute SQL first</note>
-      <xloc>576</xloc>
+      <xloc>736</xloc>
       <yloc>160</yloc>
       <width>98</width>
       <heigth>26</heigth>
@@ -543,6 +543,11 @@
     </hop>
     <hop>
       <from>Cleanup suppliername</from>
+      <to>Set field value</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Set field value</from>
       <to>Table output ausfedcontracts</to>
       <enabled>Y</enabled>
     </hop>
@@ -582,6 +587,37 @@
     </remotesteps>
     <GUI>
       <xloc>352</xloc>
+      <yloc>160</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Set field value</name>
+    <type>SetValueField</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <name>suppliername</name>
+        <replaceby>suppliername_clean</replaceby>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>496</xloc>
       <yloc>160</yloc>
       <draw>Y</draw>
     </GUI>
@@ -634,7 +670,7 @@ ORDER BY suppliername
     </partitioning>
     <connection>stagingarea</connection>
     <schema/>
-    <table>ausfedcontracts</table>
+    <table>ausfedcontracts020</table>
     <commit>1000</commit>
     <truncate>N</truncate>
     <ignore_errors>N</ignore_errors>
@@ -660,7 +696,7 @@ ORDER BY suppliername
       </field>
       <field>
         <column_name>suppliername</column_name>
-        <stream_name>suppliername_clean</stream_name>
+        <stream_name>suppliername</stream_name>
       </field>
       <field>
         <column_name>description</column_name>
@@ -708,7 +744,7 @@ ORDER BY suppliername
       </output>
     </remotesteps>
     <GUI>
-      <xloc>512</xloc>
+      <xloc>672</xloc>
       <yloc>160</yloc>
       <draw>Y</draw>
     </GUI>

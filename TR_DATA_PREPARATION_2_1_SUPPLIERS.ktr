@@ -436,13 +436,18 @@
   </info>
   <notepads>
     <notepad>
-      <note>Extract CSV file for lookup in NameLookup.xlsm
+      <note>Standarize Supplier Name
 
+1) Load ausfedcontracts020
+2) Load supplierabn where Matchscore >= 90
+3) LEFT INNER JOIN 
+4) Set suppliername
+5) Create table ausfedcontracts
 </note>
-      <xloc>80</xloc>
-      <yloc>64</yloc>
-      <width>261</width>
-      <heigth>56</heigth>
+      <xloc>16</xloc>
+      <yloc>32</yloc>
+      <width>249</width>
+      <heigth>136</heigth>
       <fontname>Segoe UI</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -516,13 +521,314 @@
   </connection>
   <order>
     <hop>
-      <from>Table input</from>
-      <to>Text file output</to>
+      <from>input ausfedcontracts020</from>
+      <to>Merge join</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>input supplierabn</from>
+      <to>Merge join</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Merge join</from>
+      <to>If match</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>If match</from>
+      <to>Set suppliername</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Set suppliername</from>
+      <to>Select values</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>If match</from>
+      <to>Select values 2</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Select values 2</from>
+      <to>Table output</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Select values</from>
+      <to>Table output</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>Table input</name>
+    <name>If match</name>
+    <type>FilterRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <send_true_to>Set suppliername</send_true_to>
+    <send_false_to>Select values 2</send_false_to>
+    <compare>
+      <condition>
+        <negated>N</negated>
+        <leftvalue>suppliernameMatch</leftvalue>
+        <function>IS NOT NULL</function>
+        <rightvalue/>
+      </condition>
+    </compare>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>560</xloc>
+      <yloc>240</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Merge join</name>
+    <type>MergeJoin</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <join_type>LEFT OUTER</join_type>
+    <step1>input ausfedcontracts020</step1>
+    <step2>input supplierabn</step2>
+    <keys_1>
+      <key>suppliername</key>
+    </keys_1>
+    <keys_2>
+      <key>suppliernameCleanup</key>
+    </keys_2>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>400</xloc>
+      <yloc>240</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Select values</name>
+    <type>SelectValues</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <select_unspecified>N</select_unspecified>
+      <remove>
+        <name>suppliernameMatch</name>
+      </remove>
+      <remove>
+        <name>suppliernameCleanup</name>
+      </remove>
+      <remove>
+        <name>matchscore</name>
+      </remove>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>848</xloc>
+      <yloc>240</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Select values 2</name>
+    <type>SelectValues</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <select_unspecified>N</select_unspecified>
+      <remove>
+        <name>suppliernameMatch</name>
+      </remove>
+      <remove>
+        <name>suppliernameCleanup</name>
+      </remove>
+      <remove>
+        <name>matchscore</name>
+      </remove>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>560</xloc>
+      <yloc>352</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Set suppliername</name>
+    <type>SetValueField</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <name>suppliername</name>
+        <replaceby>suppliernameMatch</replaceby>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>704</xloc>
+      <yloc>240</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Table output</name>
+    <type>TableOutput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>stagingarea</connection>
+    <schema/>
+    <table>ausfedcontracts021</table>
+    <commit>1000</commit>
+    <truncate>N</truncate>
+    <ignore_errors>N</ignore_errors>
+    <use_batch>Y</use_batch>
+    <specify_fields>Y</specify_fields>
+    <partitioning_enabled>N</partitioning_enabled>
+    <partitioning_field/>
+    <partitioning_daily>N</partitioning_daily>
+    <partitioning_monthly>Y</partitioning_monthly>
+    <tablename_in_field>N</tablename_in_field>
+    <tablename_field/>
+    <tablename_in_table>Y</tablename_in_table>
+    <return_keys>N</return_keys>
+    <return_field/>
+    <fields>
+      <field>
+        <column_name>agencyname</column_name>
+        <stream_name>agencyname</stream_name>
+      </field>
+      <field>
+        <column_name>value</column_name>
+        <stream_name>value</stream_name>
+      </field>
+      <field>
+        <column_name>suppliername</column_name>
+        <stream_name>suppliername</stream_name>
+      </field>
+      <field>
+        <column_name>description</column_name>
+        <stream_name>description</stream_name>
+      </field>
+      <field>
+        <column_name>contractstart</column_name>
+        <stream_name>contractstart</stream_name>
+      </field>
+      <field>
+        <column_name>contractend</column_name>
+        <stream_name>contractend</stream_name>
+      </field>
+      <field>
+        <column_name>procurementmethod</column_name>
+        <stream_name>procurementmethod</stream_name>
+      </field>
+      <field>
+        <column_name>category</column_name>
+        <stream_name>category</stream_name>
+      </field>
+      <field>
+        <column_name>agencyabn</column_name>
+        <stream_name>agencyabn</stream_name>
+      </field>
+      <field>
+        <column_name>supplierabn</column_name>
+        <stream_name>supplierabn</stream_name>
+      </field>
+      <field>
+        <column_name>categoryunspsc</column_name>
+        <stream_name>categoryunspsc</stream_name>
+      </field>
+      <field>
+        <column_name>cnid</column_name>
+        <stream_name>cnid</stream_name>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>848</xloc>
+      <yloc>352</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>input ausfedcontracts020</name>
     <type>TableInput</type>
     <description/>
     <distribute>Y</distribute>
@@ -533,8 +839,20 @@
       <schema_name/>
     </partitioning>
     <connection>stagingarea</connection>
-    <sql>SELECT DISTINCT suppliername
-FROM ausfedcontracts
+    <sql>SELECT
+  agencyname
+, value
+, suppliername
+, description
+, contractstart
+, contractend
+, procurementmethod
+, category
+, agencyabn
+, supplierabn
+, categoryunspsc
+, cnid
+FROM ausfedcontracts020
 ORDER BY suppliername
 </sql>
     <limit>0</limit>
@@ -551,14 +869,14 @@ ORDER BY suppliername
       </output>
     </remotesteps>
     <GUI>
-      <xloc>176</xloc>
-      <yloc>224</yloc>
+      <xloc>240</xloc>
+      <yloc>240</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Text file output</name>
-    <type>TextFileOutput</type>
+    <name>input supplierabn</name>
+    <type>TableInput</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -567,50 +885,20 @@ ORDER BY suppliername
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <separator>,</separator>
-    <enclosure>"</enclosure>
-    <enclosure_forced>N</enclosure_forced>
-    <enclosure_fix_disabled>N</enclosure_fix_disabled>
-    <header>Y</header>
-    <footer>N</footer>
-    <format>DOS</format>
-    <compression>None</compression>
-    <encoding/>
-    <endedLine/>
-    <fileNameInField>N</fileNameInField>
-    <fileNameField/>
-    <create_parent_folder>Y</create_parent_folder>
-    <file>
-      <name>${Internal.Entry.Current.Directory}/data_output/toNameLookup</name>
-      <servlet_output>N</servlet_output>
-      <do_not_open_new_file_init>N</do_not_open_new_file_init>
-      <extention>csv</extention>
-      <append>N</append>
-      <split>N</split>
-      <haspartno>N</haspartno>
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <SpecifyFormat>N</SpecifyFormat>
-      <date_time_format/>
-      <add_to_result_filenames>N</add_to_result_filenames>
-      <pad>N</pad>
-      <fast_dump>N</fast_dump>
-      <splitevery>0</splitevery>
-    </file>
-    <fields>
-      <field>
-        <name>suppliername</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <trim_type>none</trim_type>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-    </fields>
+    <connection>stagingarea</connection>
+    <sql>SELECT
+DISTINCT suppliernameMatch
+, suppliernameCleanup
+, matchscore
+FROM supplierabn
+WHERE matchscore >= 90 
+ORDER BY suppliernameCleanup
+</sql>
+    <limit>0</limit>
+    <lookup/>
+    <execute_each_row>N</execute_each_row>
+    <variables_active>N</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -620,8 +908,8 @@ ORDER BY suppliername
       </output>
     </remotesteps>
     <GUI>
-      <xloc>304</xloc>
-      <yloc>224</yloc>
+      <xloc>400</xloc>
+      <yloc>80</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

@@ -585,7 +585,7 @@ Steps:
     <fields>
       <field>
         <name>procurementmethod</name>
-        <value>Miss</value>
+        <value>NA</value>
         <mask/>
         <set_empty_string>N</set_empty_string>
       </field>

@@ -618,13 +618,18 @@ transformations</note>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Lookup d_date</from>
-      <to>Lookup d_suppliers</to>
+      <from>Lookup d_agencies</from>
+      <to>Add sequence</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Lookup d_agencies</from>
-      <to>Add sequence</to>
+      <from>Lookup d_date</from>
+      <to>Lookup d_date 2</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Lookup d_date 2</from>
+      <to>Lookup d_suppliers</to>
       <enabled>Y</enabled>
     </hop>
   </order>
@@ -662,8 +667,8 @@ transformations</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1008</xloc>
-      <yloc>288</yloc>
+      <xloc>896</xloc>
+      <yloc>160</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -697,8 +702,8 @@ transformations</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>800</xloc>
-      <yloc>288</yloc>
+      <xloc>672</xloc>
+      <yloc>160</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -728,8 +733,8 @@ transformations</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>896</xloc>
-      <yloc>288</yloc>
+      <xloc>784</xloc>
+      <yloc>160</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -775,8 +780,8 @@ transformations</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>688</xloc>
-      <yloc>288</yloc>
+      <xloc>672</xloc>
+      <yloc>256</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -822,8 +827,55 @@ transformations</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>576</xloc>
-      <yloc>288</yloc>
+      <xloc>672</xloc>
+      <yloc>352</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Lookup d_date</name>
+    <type>CombinationLookup</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <schema/>
+    <table>d_date</table>
+    <connection>afc</connection>
+    <commit>100</commit>
+    <cache_size>9999</cache_size>
+    <replace>Y</replace>
+    <preloadCache>N</preloadCache>
+    <crc>N</crc>
+    <crcfield>hashcode</crcfield>
+    <fields>
+      <key>
+        <name>contractstart</name>
+        <lookup>date</lookup>
+      </key>
+      <return>
+        <name>id_date</name>
+        <creation_method>tablemax</creation_method>
+        <use_autoinc>N</use_autoinc>
+      </return>
+    </fields>
+    <sequence/>
+    <last_update_field/>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>320</xloc>
+      <yloc>352</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -870,7 +922,7 @@ transformations</note>
     </remotesteps>
     <GUI>
       <xloc>176</xloc>
-      <yloc>288</yloc>
+      <yloc>352</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -916,8 +968,8 @@ transformations</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>448</xloc>
-      <yloc>288</yloc>
+      <xloc>544</xloc>
+      <yloc>352</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -934,6 +986,34 @@ transformations</note>
     </partitioning>
     <fields>
       <field>
+        <name>id_contract</name>
+        <rename/>
+      </field>
+      <field>
+        <name>id_procurement_method</name>
+        <rename/>
+      </field>
+      <field>
+        <name>id_category</name>
+        <rename/>
+      </field>
+      <field>
+        <name>id_suppliers</name>
+        <rename/>
+      </field>
+      <field>
+        <name>id_agencies</name>
+        <rename/>
+      </field>
+      <field>
+        <name>id_date</name>
+        <rename/>
+      </field>
+      <field>
+        <name>id_date_1</name>
+        <rename/>
+      </field>
+      <field>
         <name>value</name>
         <rename/>
       </field>
@@ -942,35 +1022,7 @@ transformations</note>
         <rename/>
       </field>
       <field>
-        <name>id_date</name>
-        <rename/>
-      </field>
-      <field>
-        <name>contractend</name>
-        <rename/>
-      </field>
-      <field>
         <name>cnid</name>
-        <rename/>
-      </field>
-      <field>
-        <name>id_procurement_method</name>
-        <rename/>
-      </field>
-      <field>
-        <name>id_suppliers</name>
-        <rename/>
-      </field>
-      <field>
-        <name>id_category</name>
-        <rename/>
-      </field>
-      <field>
-        <name>id_agencies</name>
-        <rename/>
-      </field>
-      <field>
-        <name>id_contract</name>
         <rename/>
       </field>
       <field>
@@ -1085,6 +1137,23 @@ transformations</note>
         <storage_type/>
       </meta>
       <meta>
+        <name>id_date_1</name>
+        <rename>id_date_1</rename>
+        <type>Integer</type>
+        <length>-2</length>
+        <precision>-2</precision>
+        <conversion_mask/>
+        <date_format_lenient>false</date_format_lenient>
+        <date_format_locale/>
+        <date_format_timezone/>
+        <lenient_string_to_number>false</lenient_string_to_number>
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
+      </meta>
+      <meta>
         <name>value</name>
         <rename>value</rename>
         <type>None</type>
@@ -1105,7 +1174,7 @@ transformations</note>
         <name>description</name>
         <rename>description</rename>
         <type>String</type>
-        <length>270</length>
+        <length>1500</length>
         <precision>-2</precision>
         <conversion_mask/>
         <date_format_lenient>false</date_format_lenient>
@@ -1169,23 +1238,6 @@ transformations</note>
         <currency_symbol/>
         <storage_type/>
       </meta>
-      <meta>
-        <name>contractend</name>
-        <rename>contractend</rename>
-        <type>Date</type>
-        <length>-2</length>
-        <precision>-2</precision>
-        <conversion_mask/>
-        <date_format_lenient>false</date_format_lenient>
-        <date_format_locale/>
-        <date_format_timezone/>
-        <lenient_string_to_number>false</lenient_string_to_number>
-        <encoding/>
-        <decimal_symbol/>
-        <grouping_symbol/>
-        <currency_symbol/>
-        <storage_type/>
-      </meta>
     </fields>
     <attributes/>
     <cluster_schema/>
@@ -1196,8 +1248,8 @@ transformations</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1104</xloc>
-      <yloc>288</yloc>
+      <xloc>1024</xloc>
+      <yloc>160</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1217,7 +1269,7 @@ transformations</note>
   agencyname
 , value
 , suppliername
-, description
+, SUBSTRING(description, 1, 100) as description
 , contractstart
 , contractend
 , procurementmethod
@@ -1243,7 +1295,7 @@ FROM ausfedcontracts
     </remotesteps>
     <GUI>
       <xloc>48</xloc>
-      <yloc>288</yloc>
+      <yloc>352</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1281,6 +1333,30 @@ FROM ausfedcontracts
         <stream_name>id_contract</stream_name>
       </field>
       <field>
+        <column_name>d_procurement_method_id_procurement_method</column_name>
+        <stream_name>id_procurement_method</stream_name>
+      </field>
+      <field>
+        <column_name>d_category_id_category</column_name>
+        <stream_name>id_category</stream_name>
+      </field>
+      <field>
+        <column_name>d_suppliers_id_suppliers</column_name>
+        <stream_name>id_suppliers</stream_name>
+      </field>
+      <field>
+        <column_name>d_agencies_id_agencies</column_name>
+        <stream_name>id_agencies</stream_name>
+      </field>
+      <field>
+        <column_name>id_contractstart</column_name>
+        <stream_name>id_date</stream_name>
+      </field>
+      <field>
+        <column_name>id_contractend</column_name>
+        <stream_name>id_date_1</stream_name>
+      </field>
+      <field>
         <column_name>cnid</column_name>
         <stream_name>cnid</stream_name>
       </field>
@@ -1293,36 +1369,12 @@ FROM ausfedcontracts
         <stream_name>description</stream_name>
       </field>
       <field>
-        <column_name>contractend</column_name>
-        <stream_name>contractend</stream_name>
-      </field>
-      <field>
-        <column_name>d_procurement_method_id_procurement_method</column_name>
-        <stream_name>id_procurement_method</stream_name>
-      </field>
-      <field>
-        <column_name>d_suppliers_id_suppliers</column_name>
-        <stream_name>id_suppliers</stream_name>
-      </field>
-      <field>
-        <column_name>d_category_id_category</column_name>
-        <stream_name>id_category</stream_name>
-      </field>
-      <field>
-        <column_name>d_agencies_id_agencies</column_name>
-        <stream_name>id_agencies</stream_name>
-      </field>
-      <field>
         <column_name>date_stamp</column_name>
         <stream_name>date_stamp</stream_name>
       </field>
       <field>
         <column_name>source</column_name>
         <stream_name>source</stream_name>
-      </field>
-      <field>
-        <column_name>contractstart</column_name>
-        <stream_name>id_date</stream_name>
       </field>
     </fields>
     <attributes/>
@@ -1334,13 +1386,13 @@ FROM ausfedcontracts
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1200</xloc>
-      <yloc>288</yloc>
+      <xloc>1152</xloc>
+      <yloc>160</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Lookup d_date</name>
+    <name>Lookup d_date 2</name>
     <type>CombinationLookup</type>
     <description/>
     <distribute>Y</distribute>
@@ -1355,13 +1407,13 @@ FROM ausfedcontracts
     <connection>afc</connection>
     <commit>100</commit>
     <cache_size>9999</cache_size>
-    <replace>N</replace>
+    <replace>Y</replace>
     <preloadCache>N</preloadCache>
     <crc>N</crc>
     <crcfield>hashcode</crcfield>
     <fields>
       <key>
-        <name>contractstart</name>
+        <name>contractend</name>
         <lookup>date</lookup>
       </key>
       <return>
@@ -1381,8 +1433,8 @@ FROM ausfedcontracts
       </output>
     </remotesteps>
     <GUI>
-      <xloc>320</xloc>
-      <yloc>288</yloc>
+      <xloc>432</xloc>
+      <yloc>352</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

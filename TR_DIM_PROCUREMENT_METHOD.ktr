@@ -633,8 +633,8 @@ Steps:
       </output>
     </remotesteps>
     <GUI>
-      <xloc>928</xloc>
-      <yloc>192</yloc>
+      <xloc>448</xloc>
+      <yloc>272</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -668,8 +668,8 @@ Steps:
       </output>
     </remotesteps>
     <GUI>
-      <xloc>672</xloc>
-      <yloc>192</yloc>
+      <xloc>192</xloc>
+      <yloc>272</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -699,8 +699,8 @@ Steps:
       </output>
     </remotesteps>
     <GUI>
-      <xloc>800</xloc>
-      <yloc>192</yloc>
+      <xloc>320</xloc>
+      <yloc>272</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -734,8 +734,8 @@ ORDER BY procurementmethod
       </output>
     </remotesteps>
     <GUI>
-      <xloc>560</xloc>
-      <yloc>192</yloc>
+      <xloc>80</xloc>
+      <yloc>272</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -794,8 +794,8 @@ ORDER BY procurementmethod
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1056</xloc>
-      <yloc>192</yloc>
+      <xloc>576</xloc>
+      <yloc>272</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>TR_DIM_SUPPLIERS</name>
+    <name>TR_FACT_CONTRACT</name>
     <description/>
     <extended_description/>
     <trans_version/>
     <trans_type>Normal</trans_type>
-    <trans_status>0</trans_status>
     <directory>/</directory>
     <parameters>
     </parameters>
@@ -428,29 +427,29 @@
     <clusterschemas>
     </clusterschemas>
     <created_user>-</created_user>
-    <created_date>2020/03/18 22:58:15.066</created_date>
+    <created_date>2020/03/23 20:14:20.089</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2020/03/18 22:58:15.066</modified_date>
+    <modified_date>2020/03/23 20:14:20.089</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
     <notepad>
-      <note>TR_DIM_SUPPLIERS
+      <note>Fact Transformation
 
-Goal: Add data to d_suppliers table in AFC schema from Staging Area
+This transformation allows to:
 
-Steps:
+1) Extract data from ausfedcontracts table in SA
+2) Lookup for the foreign key for every dimension
+3) Add constant
+4) Insert data
 
-1) Get supplier field uniques values from SA
-2) Add Subrogate Key
-3) Add time stamp
-4) Add source 
-5) Load data to AFC schema</note>
+Note: this transformation must be loaded after all the dimensions 
+transformations</note>
       <xloc>48</xloc>
-      <yloc>48</yloc>
-      <width>470</width>
-      <heigth>230</heigth>
+      <yloc>32</yloc>
+      <width>358</width>
+      <heigth>183</heigth>
       <fontname>Segoe UI</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -527,7 +526,7 @@ Steps:
     <server>localhost</server>
     <type>MYSQL</type>
     <access>Native</access>
-    <database>sa</database>
+    <database>SA</database>
     <port>3306</port>
     <username>root</username>
     <password>Encrypted 2be98afc86aa7f28dae14ac748cc2fd8a</password>
@@ -579,7 +578,32 @@ Steps:
   </connection>
   <order>
     <hop>
+      <from>Table input</from>
+      <to>Lookup d_procurement_method</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Lookup d_suppliers</from>
+      <to>Lookup d_category</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Lookup d_category</from>
+      <to>Lookup d_agencies</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Get system info</from>
+      <to>Add constants</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
       <from>Add constants</from>
+      <to>Select values</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Select values</from>
       <to>Table output</to>
       <enabled>Y</enabled>
     </hop>
@@ -589,12 +613,17 @@ Steps:
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Get system info</from>
-      <to>Add constants</to>
+      <from>Lookup d_procurement_method</from>
+      <to>Lookup d_date</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Table input</from>
+      <from>Lookup d_date</from>
+      <to>Lookup d_suppliers</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Lookup d_agencies</from>
       <to>Add sequence</to>
       <enabled>Y</enabled>
     </hop>
@@ -633,8 +662,8 @@ Steps:
       </output>
     </remotesteps>
     <GUI>
-      <xloc>528</xloc>
-      <yloc>336</yloc>
+      <xloc>1008</xloc>
+      <yloc>288</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -649,9 +678,9 @@ Steps:
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <valuename>id_suppliers</valuename>
+    <valuename>id_contract</valuename>
     <use_database>N</use_database>
-    <connection>suppliers</connection>
+    <connection/>
     <schema/>
     <seqname>SEQ_</seqname>
     <use_counter>Y</use_counter>
@@ -668,8 +697,8 @@ Steps:
       </output>
     </remotesteps>
     <GUI>
-      <xloc>272</xloc>
-      <yloc>336</yloc>
+      <xloc>800</xloc>
+      <yloc>288</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -699,8 +728,476 @@ Steps:
       </output>
     </remotesteps>
     <GUI>
-      <xloc>400</xloc>
-      <yloc>336</yloc>
+      <xloc>896</xloc>
+      <yloc>288</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Lookup d_agencies</name>
+    <type>CombinationLookup</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <schema/>
+    <table>d_agencies</table>
+    <connection>afc</connection>
+    <commit>100</commit>
+    <cache_size>9999</cache_size>
+    <replace>Y</replace>
+    <preloadCache>N</preloadCache>
+    <crc>N</crc>
+    <crcfield>hashcode</crcfield>
+    <fields>
+      <key>
+        <name>agencyname</name>
+        <lookup>agencyname</lookup>
+      </key>
+      <return>
+        <name>id_agencies</name>
+        <creation_method>tablemax</creation_method>
+        <use_autoinc>N</use_autoinc>
+      </return>
+    </fields>
+    <sequence/>
+    <last_update_field/>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>688</xloc>
+      <yloc>288</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Lookup d_category</name>
+    <type>CombinationLookup</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <schema/>
+    <table>d_category</table>
+    <connection>afc</connection>
+    <commit>100</commit>
+    <cache_size>9999</cache_size>
+    <replace>Y</replace>
+    <preloadCache>N</preloadCache>
+    <crc>N</crc>
+    <crcfield>hashcode</crcfield>
+    <fields>
+      <key>
+        <name>category</name>
+        <lookup>category</lookup>
+      </key>
+      <return>
+        <name>id_category</name>
+        <creation_method>tablemax</creation_method>
+        <use_autoinc>N</use_autoinc>
+      </return>
+    </fields>
+    <sequence/>
+    <last_update_field/>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>576</xloc>
+      <yloc>288</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Lookup d_procurement_method</name>
+    <type>CombinationLookup</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <schema/>
+    <table>d_procurement_method</table>
+    <connection>afc</connection>
+    <commit>100</commit>
+    <cache_size>9999</cache_size>
+    <replace>Y</replace>
+    <preloadCache>N</preloadCache>
+    <crc>N</crc>
+    <crcfield>hashcode</crcfield>
+    <fields>
+      <key>
+        <name>procurementmethod</name>
+        <lookup>procurementmethod</lookup>
+      </key>
+      <return>
+        <name>id_procurement_method</name>
+        <creation_method>tablemax</creation_method>
+        <use_autoinc>N</use_autoinc>
+      </return>
+    </fields>
+    <sequence/>
+    <last_update_field/>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>176</xloc>
+      <yloc>288</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Lookup d_suppliers</name>
+    <type>CombinationLookup</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <schema/>
+    <table>d_suppliers</table>
+    <connection>afc</connection>
+    <commit>100</commit>
+    <cache_size>9999</cache_size>
+    <replace>Y</replace>
+    <preloadCache>N</preloadCache>
+    <crc>N</crc>
+    <crcfield>hashcode</crcfield>
+    <fields>
+      <key>
+        <name>suppliername</name>
+        <lookup>suppliername</lookup>
+      </key>
+      <return>
+        <name>id_suppliers</name>
+        <creation_method>tablemax</creation_method>
+        <use_autoinc>N</use_autoinc>
+      </return>
+    </fields>
+    <sequence/>
+    <last_update_field/>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>448</xloc>
+      <yloc>288</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Select values</name>
+    <type>SelectValues</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <name>value</name>
+        <rename/>
+      </field>
+      <field>
+        <name>description</name>
+        <rename/>
+      </field>
+      <field>
+        <name>id_date</name>
+        <rename/>
+      </field>
+      <field>
+        <name>contractend</name>
+        <rename/>
+      </field>
+      <field>
+        <name>cnid</name>
+        <rename/>
+      </field>
+      <field>
+        <name>id_procurement_method</name>
+        <rename/>
+      </field>
+      <field>
+        <name>id_suppliers</name>
+        <rename/>
+      </field>
+      <field>
+        <name>id_category</name>
+        <rename/>
+      </field>
+      <field>
+        <name>id_agencies</name>
+        <rename/>
+      </field>
+      <field>
+        <name>id_contract</name>
+        <rename/>
+      </field>
+      <field>
+        <name>date_stamp</name>
+        <rename/>
+      </field>
+      <field>
+        <name>source</name>
+        <rename/>
+      </field>
+      <select_unspecified>N</select_unspecified>
+      <meta>
+        <name>id_contract</name>
+        <rename>id_contract</rename>
+        <type>Integer</type>
+        <length>-2</length>
+        <precision>-2</precision>
+        <conversion_mask/>
+        <date_format_lenient>false</date_format_lenient>
+        <date_format_locale/>
+        <date_format_timezone/>
+        <lenient_string_to_number>false</lenient_string_to_number>
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
+      </meta>
+      <meta>
+        <name>id_procurement_method</name>
+        <rename>id_procurement_method</rename>
+        <type>Integer</type>
+        <length>-2</length>
+        <precision>-2</precision>
+        <conversion_mask/>
+        <date_format_lenient>false</date_format_lenient>
+        <date_format_locale/>
+        <date_format_timezone/>
+        <lenient_string_to_number>false</lenient_string_to_number>
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
+      </meta>
+      <meta>
+        <name>id_category</name>
+        <rename>id_category</rename>
+        <type>Integer</type>
+        <length>-2</length>
+        <precision>-2</precision>
+        <conversion_mask/>
+        <date_format_lenient>false</date_format_lenient>
+        <date_format_locale/>
+        <date_format_timezone/>
+        <lenient_string_to_number>false</lenient_string_to_number>
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
+      </meta>
+      <meta>
+        <name>id_suppliers</name>
+        <rename>id_suppliers</rename>
+        <type>Integer</type>
+        <length>-2</length>
+        <precision>-2</precision>
+        <conversion_mask/>
+        <date_format_lenient>false</date_format_lenient>
+        <date_format_locale/>
+        <date_format_timezone/>
+        <lenient_string_to_number>false</lenient_string_to_number>
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
+      </meta>
+      <meta>
+        <name>id_agencies</name>
+        <rename>id_agencies</rename>
+        <type>Integer</type>
+        <length>-2</length>
+        <precision>-2</precision>
+        <conversion_mask/>
+        <date_format_lenient>false</date_format_lenient>
+        <date_format_locale/>
+        <date_format_timezone/>
+        <lenient_string_to_number>false</lenient_string_to_number>
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
+      </meta>
+      <meta>
+        <name>id_date</name>
+        <rename>id_date</rename>
+        <type>Integer</type>
+        <length>-2</length>
+        <precision>-2</precision>
+        <conversion_mask/>
+        <date_format_lenient>false</date_format_lenient>
+        <date_format_locale/>
+        <date_format_timezone/>
+        <lenient_string_to_number>false</lenient_string_to_number>
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
+      </meta>
+      <meta>
+        <name>value</name>
+        <rename>value</rename>
+        <type>None</type>
+        <length>-2</length>
+        <precision>-2</precision>
+        <conversion_mask/>
+        <date_format_lenient>false</date_format_lenient>
+        <date_format_locale/>
+        <date_format_timezone/>
+        <lenient_string_to_number>false</lenient_string_to_number>
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
+      </meta>
+      <meta>
+        <name>description</name>
+        <rename>description</rename>
+        <type>String</type>
+        <length>270</length>
+        <precision>-2</precision>
+        <conversion_mask/>
+        <date_format_lenient>false</date_format_lenient>
+        <date_format_locale/>
+        <date_format_timezone/>
+        <lenient_string_to_number>false</lenient_string_to_number>
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
+      </meta>
+      <meta>
+        <name>cnid</name>
+        <rename>cnid</rename>
+        <type>String</type>
+        <length>10</length>
+        <precision>-2</precision>
+        <conversion_mask/>
+        <date_format_lenient>false</date_format_lenient>
+        <date_format_locale/>
+        <date_format_timezone/>
+        <lenient_string_to_number>false</lenient_string_to_number>
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
+      </meta>
+      <meta>
+        <name>date_stamp</name>
+        <rename>date_stamp</rename>
+        <type>Timestamp</type>
+        <length>-2</length>
+        <precision>-2</precision>
+        <conversion_mask/>
+        <date_format_lenient>false</date_format_lenient>
+        <date_format_locale/>
+        <date_format_timezone/>
+        <lenient_string_to_number>false</lenient_string_to_number>
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
+      </meta>
+      <meta>
+        <name>source</name>
+        <rename>source</rename>
+        <type>String</type>
+        <length>45</length>
+        <precision>-2</precision>
+        <conversion_mask/>
+        <date_format_lenient>false</date_format_lenient>
+        <date_format_locale/>
+        <date_format_timezone/>
+        <lenient_string_to_number>false</lenient_string_to_number>
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
+      </meta>
+      <meta>
+        <name>contractend</name>
+        <rename>contractend</rename>
+        <type>Date</type>
+        <length>-2</length>
+        <precision>-2</precision>
+        <conversion_mask/>
+        <date_format_lenient>false</date_format_lenient>
+        <date_format_locale/>
+        <date_format_timezone/>
+        <lenient_string_to_number>false</lenient_string_to_number>
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
+      </meta>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1104</xloc>
+      <yloc>288</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -716,15 +1213,26 @@ Steps:
       <schema_name/>
     </partitioning>
     <connection>stagingarea</connection>
-    <sql>SELECT DISTINCT suppliername,
-supplierabn
-FROM ausfedcontracts 
+    <sql>SELECT
+  agencyname
+, value
+, suppliername
+, description
+, contractstart
+, contractend
+, procurementmethod
+, category
+, agencyabn
+, supplierabn
+, categoryunspsc
+, cnid
+FROM ausfedcontracts
 </sql>
     <limit>0</limit>
     <lookup/>
     <execute_each_row>N</execute_each_row>
     <variables_active>N</variables_active>
-    <lazy_conversion_active>Y</lazy_conversion_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -734,8 +1242,8 @@ FROM ausfedcontracts
       </output>
     </remotesteps>
     <GUI>
-      <xloc>160</xloc>
-      <yloc>336</yloc>
+      <xloc>48</xloc>
+      <yloc>288</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -751,8 +1259,8 @@ FROM ausfedcontracts
       <schema_name/>
     </partitioning>
     <connection>afc</connection>
-    <schema>afc</schema>
-    <table>d_suppliers</table>
+    <schema/>
+    <table>f_contract</table>
     <commit>1000</commit>
     <truncate>N</truncate>
     <ignore_errors>N</ignore_errors>
@@ -769,16 +1277,40 @@ FROM ausfedcontracts
     <return_field/>
     <fields>
       <field>
-        <column_name>supplierabn</column_name>
-        <stream_name>supplierabn</stream_name>
+        <column_name>id_contract</column_name>
+        <stream_name>id_contract</stream_name>
       </field>
       <field>
-        <column_name>suppliername</column_name>
-        <stream_name>suppliername</stream_name>
+        <column_name>cnid</column_name>
+        <stream_name>cnid</stream_name>
       </field>
       <field>
-        <column_name>id_suppliers</column_name>
+        <column_name>value</column_name>
+        <stream_name>value</stream_name>
+      </field>
+      <field>
+        <column_name>description</column_name>
+        <stream_name>description</stream_name>
+      </field>
+      <field>
+        <column_name>contractend</column_name>
+        <stream_name>contractend</stream_name>
+      </field>
+      <field>
+        <column_name>d_procurement_method_id_procurement_method</column_name>
+        <stream_name>id_procurement_method</stream_name>
+      </field>
+      <field>
+        <column_name>d_suppliers_id_suppliers</column_name>
         <stream_name>id_suppliers</stream_name>
+      </field>
+      <field>
+        <column_name>d_category_id_category</column_name>
+        <stream_name>id_category</stream_name>
+      </field>
+      <field>
+        <column_name>d_agencies_id_agencies</column_name>
+        <stream_name>id_agencies</stream_name>
       </field>
       <field>
         <column_name>date_stamp</column_name>
@@ -787,6 +1319,10 @@ FROM ausfedcontracts
       <field>
         <column_name>source</column_name>
         <stream_name>source</stream_name>
+      </field>
+      <field>
+        <column_name>contractstart</column_name>
+        <stream_name>id_date</stream_name>
       </field>
     </fields>
     <attributes/>
@@ -798,8 +1334,55 @@ FROM ausfedcontracts
       </output>
     </remotesteps>
     <GUI>
-      <xloc>656</xloc>
-      <yloc>336</yloc>
+      <xloc>1200</xloc>
+      <yloc>288</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Lookup d_date</name>
+    <type>CombinationLookup</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <schema/>
+    <table>d_date</table>
+    <connection>afc</connection>
+    <commit>100</commit>
+    <cache_size>9999</cache_size>
+    <replace>N</replace>
+    <preloadCache>N</preloadCache>
+    <crc>N</crc>
+    <crcfield>hashcode</crcfield>
+    <fields>
+      <key>
+        <name>contractstart</name>
+        <lookup>date</lookup>
+      </key>
+      <return>
+        <name>id_date</name>
+        <creation_method>tablemax</creation_method>
+        <use_autoinc>N</use_autoinc>
+      </return>
+    </fields>
+    <sequence/>
+    <last_update_field/>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>320</xloc>
+      <yloc>288</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

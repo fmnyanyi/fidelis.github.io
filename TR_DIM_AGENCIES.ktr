@@ -468,11 +468,11 @@ Steps:
     </notepad>
   </notepads>
   <connection>
-    <name>agencies</name>
+    <name>afc</name>
     <server>localhost</server>
     <type>MYSQL</type>
     <access>Native</access>
-    <database>sa</database>
+    <database>afc</database>
     <port>3306</port>
     <username>root</username>
     <password>Encrypted 2be98afc86aa7f28dae14ac748cc2fd8a</password>
@@ -523,11 +523,11 @@ Steps:
     </attributes>
   </connection>
   <connection>
-    <name>agencies_load_to_afc</name>
+    <name>stagingarea</name>
     <server>localhost</server>
     <type>MYSQL</type>
     <access>Native</access>
-    <database>afc</database>
+    <database>sa</database>
     <port>3306</port>
     <username>root</username>
     <password>Encrypted 2be98afc86aa7f28dae14ac748cc2fd8a</password>
@@ -715,8 +715,8 @@ Steps:
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>agencies</connection>
-    <sql>SELECT agencyabn, agencyname
+    <connection>stagingarea</connection>
+    <sql>SELECT DISTINCT agencyname, agencyabn
 FROM ausfedcontracts 
 </sql>
     <limit>0</limit>
@@ -749,7 +749,7 @@ FROM ausfedcontracts
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>agencies_load_to_afc</connection>
+    <connection>afc</connection>
     <schema>afc</schema>
     <table>d_agencies</table>
     <commit>1000</commit>
